@@ -7,6 +7,7 @@ import ProTip from '../ProTip';
 import Copyright from '../Copyright';
 
 export default function Home() {
+  console.log('test');
   return (
     <Container maxWidth='lg'>
       <Box
