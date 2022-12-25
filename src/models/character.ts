@@ -1,32 +1,55 @@
-class Character {
-  coordinateX:number
-  coordinateY: number;
-  id:string;
-  img = new Image();
-  speed:number;
-  constructor(x: number, y: number, id:string) {
-    this.coordinateX = x;
-    this.coordinateY = y;
-    this.id = id;
-    this.speed = 1; // player：アイテムの取得・NPC：難易度により変化
-  }
+type Position = {
+  x: number;
+  y: number;
+};
+
+interface GameObject {
+  //   getName(): string;
+  //   getPosition(): Position;
+  //   getSpeed(): number {
+  //     return this.speed;
+  //   }
+  //   setSpeed(value: number): void {
+  //     this.speed = value;
+  //   }
+  //   accelerate(value: number): void {
+  //     this.setSpeed(this.getSpeed() + value);
+  //   }
 }
 
-export class Player extends Character {
-  name: string;
-  constructor(x: number, y: number) {
-    super(x, y, "player");
-    this.name = 'Player';
-    this.img.src = this.id + ".png";
-  }
-}
+// ↓↓↓ implements GameObject
+export class Character extends Phaser.Physics.Arcade
+  .Sprite {
+  protected id: number;
+  protected characterName: string;
+  //   protected img: string;
 
-/*
-↓以下サンプル
-export class NPC extends Character {
-  constructor(x: number, y: number) {
-    super(x, y);
-    this.img.src = "test.png";
+  protected speed: number = 0;
+  // 0:up, 1:right, 2:down, 3:left
+  protected direction: number = 2;
+  protected isAlive: boolean = true;
+
+  constructor(
+    params: {
+      scene: Phaser.Scene;
+      x: number;
+      y: number;
+    },
+    type: string
+  ) {
+    super(params.scene, params.x, params.y, type);
   }
+
+  //   getPosition(): Position {
+  //     return { x: this.x, y: this.y };
+  //   }
+  //   getSpeed(): number {
+  //     return this.speed;
+  //   }
+  //   setSpeed(value: number): void {
+  //     this.speed = value;
+  //   }
+  //   accelerate(value: number): void {
+  //     this.setSpeed(this.getSpeed() + value);
+  //   }
 }
-*/
