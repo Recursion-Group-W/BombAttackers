@@ -1,55 +1,61 @@
-type Position = {
+import { Character } from './character';
+
+export class Enemy extends Character {
+  constructor(params: {
+    scene: Phaser.Scene;
     x: number;
     y: number;
-  };
-  interface Character {
-    getName(): string;
-    getPosition(): Position;
-    getSpeed(): number;
+  }) {
+    super(params, 'enemy');
+    this.speed = 150;
+
+    //Arcade Physicsをゲームオブジェクトに追加
+    params.scene.physics.world.enable(this);
+    //Sceneにゲームオブジェクトを追加
+    params.scene.add.existing(this);
   }
-  class GenericCharacter implements Character {
-    protected id: number;
-    protected name: string;
-    protected img: string;
-    protected coordinateX: number;
-    protected coordinateY: number;
-    protected speed: number;
-    protected isAttacked: boolean = false;
-    constructor(
-      id: number,
-      name: string,
-      img: string,
-      coordinateX: number,
-      coordinateY: number,
-      speed: number
-    ) {
-      this.id = 0;
-      this.name = name;
-      this.img = img;
-      this.coordinateX = coordinateX;
-      this.coordinateY = coordinateY;
-      this.speed = speed;
-    }
-  
-    getName(): string {
-      return this.name;
-    }
-    getPosition(): Position {
-      return { x: this.coordinateX, y: this.coordinateY };
-    }
-    getSpeed(): number {
-      return this.speed;
+
+  public update() {
+    if (this.body.velocity.x + this.body.velocity.y === 0) {
+      if (this.body.velocity.x == 0) {
+        this.direction === 1
+          ? this.moveLeft()
+          : this.moveRight();
+      } else if (this.body.velocity.y === 0) {
+        this.direction === 0
+          ? this.moveDown()
+          : this.moveUp();
+      }
     }
   }
-  export class Monster extends GenericCharacter {
-    constructor(
-      id: number,
-      name: string,
-      img: string,
-      coordinateX: number,
-      coordinateY: number,
-      speed: number
-    ) {
-      super(id, name, img, coordinateX, coordinateY, speed);
-    }
+
+  moveUp() {
+    this.direction = 0;
+    this.setVelocityX(0);
+    this.setVelocityY(-this.speed);
+    this.anims.play('enemy-up', true);
   }
+
+  moveRight() {
+    this.direction = 1;
+    this.setVelocityX(this.speed);
+    this.setVelocityY(0);
+    this.flipX = false;
+    this.anims.play('enemy-right', true);
+  }
+
+  moveDown() {
+    this.direction = 2;
+    this.setVelocityX(0);
+    this.setVelocityY(this.speed);
+    this.anims.play('enemy-down', true);
+  }
+
+  moveLeft() {
+    this.direction = 3;
+    this.setVelocityX(-this.speed);
+    this.setVelocityY(0);
+    this.flipX = true;
+    this.anims.play('enemy-right', true);
+  }
+}

@@ -1,40 +1,68 @@
-type Position = {
-  x: number;
-  y: number;
-};
+import { Character } from './character';
 
-export class Player {
-  private speed: number = 1;
-  constructor(
-    private coordinateX: number,
-    private coordinateY: number
-  ) {}
+export class Player extends Character {
+  private cursors: any;
+  // 0:up, 1:right, 2:down, 3:left
 
-  getSpeed(): number {
-    return this.speed;
+  constructor(params: {
+    scene: Phaser.Scene;
+    x: number;
+    y: number;
+  }) {
+    super(params, 'player');
+    this.speed = 500;
+    // 上、下、左、右、スペース、シフトのキーを含むオブジェクトを作成して返す。
+    this.cursors =
+      params.scene.input.keyboard.createCursorKeys();
+
+    params.scene.add.existing(this);
+    params.scene.physics.world.enable(this);
+
+    this.body.maxVelocity = <any>{ x: 150, y: 150 };
   }
-  setSpeed(value: number): void {
-    this.speed = value;
+
+  public update() {
+    this.handleInput();
   }
-  accelerate(value: number): void {
-    this.setSpeed(this.getSpeed() + value);
-  }
-  getPosition(): Position {
-    return { x: this.coordinateX, y: this.coordinateY };
-  }
-  setPosition(x: number, y: number): void {
-    (this.coordinateX = x), (this.coordinateY = y);
-  }
-  moveX(dx: number): void {
-    this.setPosition(
-      this.getPosition().x + dx,
-      this.getPosition().y
-    );
-  }
-  moveY(dy: number): void {
-    this.setPosition(
-      this.getPosition().x,
-      this.getPosition().y + dy
-    );
+
+  public handleInput() {
+    if (this.cursors.left.isDown) {
+      this.anims.play('player-right', true);
+      this.direction = 3;
+      this.setVelocityX(-this.speed);
+      this.setVelocityY(0);
+    } else if (this.cursors.right.isDown) {
+      this.anims.play('player-right', true);
+      this.direction = 1;
+      this.setVelocityX(this.speed);
+      this.setVelocityY(0);
+    } else if (this.cursors.down.isDown) {
+      this.anims.play('player-down', true);
+      this.direction = 2;
+      this.setVelocityX(0);
+      this.setVelocityY(this.speed);
+    } else if (this.cursors.up.isDown) {
+      this.anims.play('player-walk-up', true);
+      this.direction = 0;
+      this.setVelocityX(0);
+      this.setVelocityY(-this.speed);
+    } else {
+      switch (this.direction) {
+        case 0:
+          this.anims.play('player-turn-up', true);
+          break;
+        case 1:
+        case 2:
+          this.anims.play('player-turn-down', true);
+          break;
+        case 3:
+          this.anims.play('player-turn-right', true);
+          break;
+      }
+      this.setVelocity(0, 0);
+    }
+
+    //左に進むときは右方向の動きを反転させる
+    this.flipX = this.direction === 3;
   }
 }

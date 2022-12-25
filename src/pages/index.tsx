@@ -28,6 +28,12 @@ export default function Home() {
         <Link href='/about' color='secondary'>
           Go to the about page
         </Link>
+        <Link
+          href='/play'
+          style={{ textDecoration: 'none' }}
+        >
+          <h1>Game Start!!</h1>
+        </Link>
         <ProTip />
         <Copyright />
       </Box>
