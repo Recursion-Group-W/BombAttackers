@@ -1,0 +1,307 @@
+
+sd_player.png
+size: 1350, 269
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+dbody
+  rotate: true
+  xy: 523, 76
+  size: 191, 179
+  orig: 193, 181
+  offset: 1, 1
+  index: -1
+dbody_leg_ld
+  rotate: true
+  xy: 1063, 10
+  size: 90, 75
+  orig: 94, 79
+  offset: 2, 2
+  index: -1
+dbody_leg_lu
+  rotate: true
+  xy: 597, 4
+  size: 70, 94
+  orig: 72, 97
+  offset: 1, 2
+  index: -1
+dbody_leg_rd
+  rotate: false
+  xy: 800, 2
+  size: 64, 93
+  orig: 66, 95
+  offset: 1, 1
+  index: -1
+dbody_leg_rshoe
+  rotate: false
+  xy: 1290, 188
+  size: 56, 42
+  orig: 58, 44
+  offset: 1, 1
+  index: -1
+dbody_leg_ru
+  rotate: true
+  xy: 497, 7
+  size: 57, 98
+  orig: 60, 100
+  offset: 2, 1
+  index: -1
+doby_leg_lshoe
+  rotate: true
+  xy: 53, 7
+  size: 48, 57
+  orig: 50, 59
+  offset: 1, 1
+  index: -1
+face
+  rotate: false
+  xy: 986, 102
+  size: 142, 165
+  orig: 144, 167
+  offset: 1, 1
+  index: -1
+face_e1_1
+  rotate: false
+  xy: 249, 9
+  size: 111, 46
+  orig: 113, 48
+  offset: 1, 1
+  index: -1
+face_e1_2
+  rotate: true
+  xy: 1130, 156
+  size: 111, 30
+  orig: 114, 33
+  offset: 2, 1
+  index: -1
+face_e1_3
+  rotate: true
+  xy: 1249, 158
+  size: 109, 22
+  orig: 111, 24
+  offset: 1, 1
+  index: -1
+face_e2
+  rotate: true
+  xy: 1273, 163
+  size: 104, 15
+  orig: 106, 17
+  offset: 1, 1
+  index: -1
+face_e3
+  rotate: false
+  xy: 1163, 112
+  size: 107, 44
+  orig: 110, 46
+  offset: 1, 1
+  index: -1
+face_e4
+  rotate: true
+  xy: 1029, 7
+  size: 93, 32
+  orig: 95, 34
+  offset: 1, 1
+  index: -1
+face_e5
+  rotate: true
+  xy: 950, 4
+  size: 95, 36
+  orig: 98, 39
+  offset: 1, 1
+  index: -1
+face_e6
+  rotate: true
+  xy: 988, 7
+  size: 93, 39
+  orig: 95, 41
+  offset: 1, 1
+  index: -1
+face_m1
+  rotate: false
+  xy: 704, 76
+  size: 32, 19
+  orig: 34, 21
+  offset: 1, 1
+  index: -1
+face_m2
+  rotate: false
+  xy: 1290, 163
+  size: 40, 23
+  orig: 42, 25
+  offset: 1, 1
+  index: -1
+face_m3
+  rotate: true
+  xy: 1271, 10
+  size: 42, 21
+  orig: 44, 23
+  offset: 1, 1
+  index: -1
+face_m4
+  rotate: false
+  xy: 249, 2
+  size: 25, 5
+  orig: 27, 7
+  offset: 1, 1
+  index: -1
+face_m5
+  rotate: true
+  xy: 1130, 109
+  size: 45, 31
+  orig: 47, 34
+  offset: 1, 1
+  index: -1
+face_mayu_l
+  rotate: false
+  xy: 738, 84
+  size: 38, 11
+  orig: 40, 13
+  offset: 1, 1
+  index: -1
+face_mayu_r
+  rotate: false
+  xy: 523, 66
+  size: 35, 8
+  orig: 37, 10
+  offset: 1, 1
+  index: -1
+hair_b
+  rotate: false
+  xy: 2, 57
+  size: 195, 210
+  orig: 197, 212
+  offset: 1, 1
+  index: -1
+hair_deco
+  rotate: true
+  xy: 1294, 19
+  size: 33, 30
+  orig: 35, 33
+  offset: 1, 1
+  index: -1
+hair_f1
+  rotate: true
+  xy: 693, 5
+  size: 69, 105
+  orig: 72, 107
+  offset: 2, 1
+  index: -1
+hair_f2
+  rotate: false
+  xy: 325, 66
+  size: 196, 201
+  orig: 198, 203
+  offset: 1, 1
+  index: -1
+hair_f_ml
+  rotate: true
+  xy: 1165, 2
+  size: 19, 100
+  orig: 21, 102
+  offset: 1, 1
+  index: -1
+hair_f_mr
+  rotate: false
+  xy: 1140, 2
+  size: 23, 105
+  orig: 25, 107
+  offset: 1, 1
+  index: -1
+hair_headphone
+  rotate: true
+  xy: 199, 57
+  size: 210, 124
+  orig: 212, 126
+  offset: 1, 1
+  index: -1
+item_1
+  rotate: false
+  xy: 362, 5
+  size: 99, 59
+  orig: 101, 62
+  offset: 1, 2
+  index: -1
+item_2
+  rotate: true
+  xy: 704, 97
+  size: 170, 151
+  orig: 185, 158
+  offset: 8, 5
+  index: -1
+ubody
+  rotate: false
+  xy: 857, 101
+  size: 127, 166
+  orig: 130, 168
+  offset: 2, 1
+  index: -1
+ubody_arm_ld
+  rotate: false
+  xy: 1272, 54
+  size: 76, 102
+  orig: 78, 104
+  offset: 1, 1
+  index: -1
+ubody_arm_lh
+  rotate: true
+  xy: 112, 7
+  size: 48, 44
+  orig: 50, 46
+  offset: 1, 1
+  index: -1
+ubody_arm_lh2
+  rotate: true
+  xy: 203, 8
+  size: 47, 44
+  orig: 50, 47
+  offset: 2, 2
+  index: -1
+ubody_arm_lrib
+  rotate: true
+  xy: 1290, 232
+  size: 35, 57
+  orig: 39, 59
+  offset: 2, 1
+  index: -1
+ubody_arm_lu
+  rotate: false
+  xy: 1162, 158
+  size: 85, 109
+  orig: 87, 115
+  offset: 1, 5
+  index: -1
+ubody_arm_rd
+  rotate: true
+  xy: 866, 3
+  size: 96, 82
+  orig: 99, 84
+  offset: 1, 1
+  index: -1
+ubody_arm_rh
+  rotate: false
+  xy: 2, 6
+  size: 49, 49
+  orig: 51, 51
+  offset: 1, 1
+  index: -1
+ubody_arm_rh2
+  rotate: true
+  xy: 158, 7
+  size: 48, 43
+  orig: 50, 45
+  offset: 1, 1
+  index: -1
+ubody_arm_rrib
+  rotate: false
+  xy: 463, 5
+  size: 32, 59
+  orig: 34, 61
+  offset: 1, 1
+  index: -1
+ubody_arm_ru
+  rotate: false
+  xy: 1165, 23
+  size: 104, 87
+  orig: 106, 91
+  offset: 1, 3
+  index: -1
