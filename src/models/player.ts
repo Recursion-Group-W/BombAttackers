@@ -13,6 +13,7 @@ export class Player extends Character {
     // 上、下、左、右、スペース、シフトのキーを含むオブジェクトを作成して返す。
     this.cursors =
       params.scene.input.keyboard.createCursorKeys();
+    this.bombCounter = 1;
 
     params.scene.add.existing(this);
     params.scene.physics.world.enable(this);
@@ -92,5 +93,13 @@ export class Player extends Character {
 
     //左に進むときは右方向の動きを反転させる
     this.flipX = this.getDirection() === 3;
+  }
+
+  public placingBomb() {
+    if (this.cursors.space.isDown && this.bombCounter > 0) {
+      this.bombCounter--;
+      return true;
+    }
+    return false;
   }
 }

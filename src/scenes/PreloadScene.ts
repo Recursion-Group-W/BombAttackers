@@ -26,6 +26,10 @@ export class PreloadScene extends Phaser.Scene {
         frameHeight: 32,
       }
     );
+    this.load.spritesheet('bomb', '/assets/bomb.png', {
+      frameWidth: 32,
+      frameHeight: 32,
+    });
   }
 
   update() {

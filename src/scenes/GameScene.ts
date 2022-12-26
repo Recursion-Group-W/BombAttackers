@@ -1,6 +1,7 @@
 import { Scene } from 'phaser';
 import { Enemy } from '../models/enemy';
 import { Player } from '../models/player';
+import { Bomb } from '../models/bomb';
 
 export class GameScene extends Scene {
   private width: number; //描画範囲(width)
@@ -40,24 +41,24 @@ export class GameScene extends Scene {
     this.map = this.make.tilemap({
       key: `stage${this.level}`,
     });
-    let tiles = this.map.addTilesetImage(
+    const tiles = this.map.addTilesetImage(
       'tileset',
       'tileset'
     );
 
-    let groundLayer = this.map.createLayer(
+    const groundLayer = this.map.createLayer(
       'ground',
       tiles,
       0,
       0
     );
-    let wallLayer = this.map.createLayer(
+    const wallLayer = this.map.createLayer(
       'wall',
       tiles,
       0,
       0
     );
-    let blockLayer = this.map.createLayer(
+    const blockLayer = this.map.createLayer(
       'blocks',
       tiles,
       0,
@@ -85,7 +86,7 @@ export class GameScene extends Scene {
     //敵キャラたち
     this.enemies = this.add.group();
 
-    let objectLayer = this.map.getObjectLayer('objects');
+    const objectLayer = this.map.getObjectLayer('objects');
     objectLayer.objects.forEach((object) => {
       if (object.name === 'player') {
         this.player = new Player({
@@ -158,6 +159,13 @@ export class GameScene extends Scene {
   update() {
     //キー入力によってプレイヤーの位置を更新
     this.player.update();
+    if (this.player.placingBomb()) {
+      const bomb = new Bomb({
+        scene: this,
+        x: this.player.x,
+        y: this.player.y,
+      });
+    };
     //敵の位置を更新
     this.enemies.getChildren().forEach((e) => e.update());
   }
@@ -165,8 +173,6 @@ export class GameScene extends Scene {
   //アニメーション設定
   initAnimation() {
     //アニメーションマネージャー
-    let anims: Phaser.Animations.AnimationManager =
-      this.anims;
     anims.create({
       key: 'player-right',
       frameRate: 10,
