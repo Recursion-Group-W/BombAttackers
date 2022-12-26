@@ -2,8 +2,6 @@ import { Character } from './character';
 
 export class Player extends Character {
   private cursors: Phaser.Types.Input.Keyboard.CursorKeys;
-  private bombCounter: number;
-  // 0:up, 1:right, 2:down, 3:left
 
   constructor(params: {
     scene: Phaser.Scene;
@@ -11,7 +9,7 @@ export class Player extends Character {
     y: number;
   }) {
     super(params, 'player');
-    this.speed = 500;
+    this.setSpeed(120);
     // 上、下、左、右、スペース、シフトのキーを含むオブジェクトを作成して返す。
     this.cursors =
       params.scene.input.keyboard.createCursorKeys();
@@ -20,40 +18,69 @@ export class Player extends Character {
     params.scene.add.existing(this);
     params.scene.physics.world.enable(this);
 
-    this.body.maxVelocity = <any>{ x: 150, y: 150 };
+    this.body.maxVelocity = <any>{ x: 250, y: 250 };
+
+    this.setStock(3);
   }
 
-  public update() {
+  update() {
     this.handleInput();
   }
 
-  public handleInput() {
+  //敵とぶつかった時
+  collideWithEnemy(stockText: Phaser.GameObjects.Text, gameOverText: Phaser.GameObjects.Text) {
+    this.scene.cameras.main.shake(1000, 0.001);
+    this.setTintFill(0xff0000);
+    //残機を減らす
+    this.setStock(this.getStock() - 1);
+
+    //残機の表示を更新
+    stockText.setText('Stock: ' + this.getStock());
+
+    //残機が0になったらGAME OVER
+    if (this.getStock() <= 0) {
+      // this.disableBody(true, true);
+      gameOverText.setText('GAME OVER');
+      setTimeout(() => this.scene.scene.restart(), 1000);
+    }
+  }
+
+  //爆風に重なった時
+  overlapExplosion() {
+    this.scene.cameras.main.shake(1000, 0.001);
+    //残機を減らす
+    this.setStock(this.getStock() - 1);
+    //残機が0になったらオブジェクトを削除
+    if (this.getStock() <= 0) {
+      this.disableBody(true, true);
+    }
+  }
+
+  handleInput() {
     if (this.cursors.left.isDown) {
       this.anims.play('player-right', true);
-      this.direction = 3;
-      this.setVelocityX(-this.speed);
-      this.setVelocityY(0);
+      this.setDirection(3);
+      this.setVelocity(-this.getSpeed(), 0);
     } else if (this.cursors.right.isDown) {
       this.anims.play('player-right', true);
-      this.direction = 1;
-      this.setVelocityX(this.speed);
-      this.setVelocityY(0);
+      this.setDirection(1);
+      this.setVelocity(this.getSpeed(), 0);
     } else if (this.cursors.down.isDown) {
       this.anims.play('player-down', true);
-      this.direction = 2;
-      this.setVelocityX(0);
-      this.setVelocityY(this.speed);
+      this.setDirection(2);
+      this.setVelocity(0, this.getSpeed());
     } else if (this.cursors.up.isDown) {
-      this.anims.play('player-walk-up', true);
-      this.direction = 0;
-      this.setVelocityX(0);
-      this.setVelocityY(-this.speed);
+      this.anims.play('player-up', true);
+      this.setDirection(0);
+      this.setVelocity(0, -this.getSpeed());
     } else {
-      switch (this.direction) {
+      //キーが押されていない時
+      switch (this.getDirection()) {
         case 0:
           this.anims.play('player-turn-up', true);
           break;
         case 1:
+          break;
         case 2:
           this.anims.play('player-turn-down', true);
           break;
@@ -65,7 +92,7 @@ export class Player extends Character {
     }
 
     //左に進むときは右方向の動きを反転させる
-    this.flipX = this.direction === 3;
+    this.flipX = this.getDirection() === 3;
   }
 
   public placingBomb() {

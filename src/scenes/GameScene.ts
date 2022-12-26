@@ -4,17 +4,21 @@ import { Player } from '../models/player';
 import { Bomb } from '../models/bomb';
 
 export class GameScene extends Scene {
-  private width: number;
-  private height: number;
-  private player: Player;
-  private enemies: Phaser.GameObjects.Group;
-  private map: Phaser.Tilemaps.Tilemap;
-  private level: number;
+  private width: number; //描画範囲(width)
+  private height: number; //描画範囲(width)
+  private player: Player; //プレイヤー
+  private enemies: Phaser.GameObjects.Group; //敵キャラのグループ
+  private map: Phaser.Tilemaps.Tilemap; //タイルマップ（ステージ）
+  private level: number; //ステージレベル
+  private scoreText: Phaser.GameObjects.Text;
+  private stockText: Phaser.GameObjects.Text;
+  private gameOverText: Phaser.GameObjects.Text;
 
   constructor() {
     super({ key: 'GameScene' });
   }
 
+  //init, preload, create, updateはSceneに用意されているメソッドなので、オーバーライドする
   init(data: { stageLevel: number }) {
     this.level = data.stageLevel;
   }
@@ -101,8 +105,25 @@ export class GameScene extends Scene {
         );
       }
     });
+
+    // 残機
+    this.stockText = this.add.text(
+      16,
+      0,
+      `Stock ${this.player.getStock()}`,
+      {
+        fontSize: '32px',
+      }
+    );
+
+    // ゲームオーバー表示を追加する
+    this.gameOverText = this.add.text(400, 300, '', {
+      fontSize: '64px',
+    });
+    this.gameOverText.setOrigin(0.5);
+
     //衝突を設定
-    // overlapはすり抜ける（アイテム取得など）
+    // overlapはすり抜ける（爆弾,アイテム取得など）
     // colliderはすり抜けずに衝突する
     this.physics.add.collider(wallLayer, this.player);
     this.physics.add.collider(blockLayer, this.player);
@@ -111,14 +132,32 @@ export class GameScene extends Scene {
     this.physics.add.collider(
       this.player,
       this.enemies,
-      () => {
-        //衝突した時の処理(残機を減らす)
-      }
+      (
+        player: Phaser.Types.Physics.Arcade.GameObjectWithBody,
+        enemy: Phaser.Types.Physics.Arcade.GameObjectWithBody
+      ) => {
+        //衝突した時の処理
+        player.collideWithEnemy(
+          this.stockText,
+          this.gameOverText
+        );
+        enemy.collideWithPlayer();
+      },
+      null,
+      this
     );
+    //すり抜けた時（爆弾、アイテムなど）
+    // this.physics.add.overlap(
+    //   this.player,
+    //   this.bomb,
+    //   () => {
+    //     //すり抜けた時の処理(残機を減らす、アイテム取得)
+    //   }
+    // );
   }
 
   update() {
-    //キーによってプレイヤーの位置を更新
+    //キー入力によってプレイヤーの位置を更新
     this.player.update();
     if (this.player.placingBomb()) {
       const bomb = new Bomb({
@@ -131,9 +170,9 @@ export class GameScene extends Scene {
     this.enemies.getChildren().forEach((e) => e.update());
   }
 
+  //アニメーション設定
   initAnimation() {
     //アニメーションマネージャー
-    const anims = this.anims;
     anims.create({
       key: 'player-right',
       frameRate: 10,
