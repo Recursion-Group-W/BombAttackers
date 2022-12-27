@@ -2,6 +2,7 @@ import { Character } from './character';
 
 export class Player extends Character {
   private cursors: Phaser.Types.Input.Keyboard.CursorKeys;
+  private bombCounter: number;
 
   constructor(params: {
     scene: Phaser.Scene;
