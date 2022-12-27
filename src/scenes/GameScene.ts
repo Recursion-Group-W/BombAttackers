@@ -3,6 +3,7 @@ import { Enemy } from '../models/enemy';
 import { Player } from '../models/player';
 import { Bomb } from '../models/bomb';
 import { setTimeout } from 'timers/promises';
+import { LocationDisabled } from '@mui/icons-material';
 
 export class GameScene extends Scene {
   private width: number; //描画範囲(width)
@@ -15,9 +16,14 @@ export class GameScene extends Scene {
   private stockText: Phaser.GameObjects.Text;
   private gameOverText: Phaser.GameObjects.Text;
   private bombs: Phaser.GameObjects.Group;
+  private bombLog: { x: number; y: number };
 
   constructor() {
     super({ key: 'GameScene' });
+    this.bombLog = {
+      x: -1,
+      y: -1,
+    };
   }
 
   //init, preload, create, updateはSceneに用意されているメソッドなので、オーバーライドする
@@ -161,19 +167,34 @@ export class GameScene extends Scene {
     // );
   }
 
+  // 爆弾を作る関数
+
   update() {
     //キー入力によってプレイヤーの位置を更新
     this.player.update();
+
+    let bomb: any;
     if (this.player.placingBomb()) {
-      const bomb = this.bombs.create(
-        this.player.x,
-        this.player.y,
-        'bomb'
-      );
-      window.setTimeout(() => {
-        bomb.disableBody(true, true);
-        this.player.increaseBombCounter();
-      }, 1000);
+      if (
+        this.bombLog.x != this.player.x ||
+        this.bombLog.y != this.player.y
+      ) {
+        bomb = new Bomb({
+          scene: this,
+          x: this.player.x,
+          y: this.player.y,
+        });
+        this.player.decreaseBombCounter();
+        bomb.anims.play('bomb-anime', true);
+        window.setTimeout(() => {
+          console.log(bomb);
+          this.bombLog.x = bomb.x;
+          this.bombLog.y = bomb.y;
+          bomb.disableBody(true, true);
+          console.log(bomb);
+          this.player.increaseBombCounter();
+        }, 2000);
+      }
     }
     //敵の位置を更新
     this.enemies.getChildren().forEach((e) => e.update());
@@ -272,6 +293,15 @@ export class GameScene extends Scene {
       frameRate: 10,
       repeat: 0,
       frames: [{ key: 'enemy', frame: 0 }],
+    });
+    this.anims.create({
+      key: 'bomb-anime',
+      frameRate: 10,
+      repeat: 2,
+      frames: this.anims.generateFrameNumbers('bomb', {
+        start: 0,
+        end: 7,
+      }),
     });
   }
 }

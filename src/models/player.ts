@@ -14,7 +14,7 @@ export class Player extends Character {
     // 上、下、左、右、スペース、シフトのキーを含むオブジェクトを作成して返す。
     this.cursors =
       params.scene.input.keyboard.createCursorKeys();
-    this.bombCounter = 1;
+    this.bombCounter = 3;
 
     params.scene.add.existing(this);
     params.scene.physics.world.enable(this);
@@ -97,13 +97,14 @@ export class Player extends Character {
   }
 
   public placingBomb() {
-    if (this.cursors.space.isDown && this.bombCounter > 0) {
-      this.bombCounter--;
-      return true;
-    }
-    return false;
+    return Phaser.Input.Keyboard.JustDown(this.cursors.space) && this.bombCounter > 0;
+  }
+  public decreaseBombCounter() {
+    this.bombCounter--;
   }
   public increaseBombCounter() {
     this.bombCounter++;
   }
+  
+  // 爆弾を作る関数
 }
