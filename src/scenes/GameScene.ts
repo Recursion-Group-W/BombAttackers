@@ -16,13 +16,18 @@ export class GameScene extends Scene {
   private stockText: Phaser.GameObjects.Text;
   private gameOverText: Phaser.GameObjects.Text;
   private bombs: Phaser.GameObjects.Group;
-  private bombLog: { x: number; y: number };
+  private bombLog: {
+    x: number;
+    y: number;
+    existed: boolean;
+  };
 
   constructor() {
     super({ key: 'GameScene' });
     this.bombLog = {
       x: -1,
       y: -1,
+      existed: false,
     };
   }
 
@@ -177,21 +182,22 @@ export class GameScene extends Scene {
     if (this.player.placingBomb()) {
       if (
         this.bombLog.x != this.player.x ||
-        this.bombLog.y != this.player.y
+        this.bombLog.y != this.player.y ||
+        !this.bombLog.existed
       ) {
         bomb = new Bomb({
           scene: this,
           x: this.player.x,
           y: this.player.y,
         });
+        this.bombLog.existed = true;
         this.player.decreaseBombCounter();
         bomb.anims.play('bomb-anime', true);
         window.setTimeout(() => {
-          console.log(bomb);
           this.bombLog.x = bomb.x;
           this.bombLog.y = bomb.y;
-          bomb.disableBody(true, true);
-          console.log(bomb);
+          bomb.destroy();
+          this.bombLog.existed = false;
           this.player.increaseBombCounter();
         }, 2000);
       }
