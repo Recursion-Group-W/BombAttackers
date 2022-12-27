@@ -2,6 +2,7 @@ import { Scene } from 'phaser';
 import { Enemy } from '../models/enemy';
 import { Player } from '../models/player';
 import { Bomb } from '../models/bomb';
+import { setTimeout } from 'timers/promises';
 
 export class GameScene extends Scene {
   private width: number; //描画範囲(width)
@@ -13,7 +14,7 @@ export class GameScene extends Scene {
   private scoreText: Phaser.GameObjects.Text;
   private stockText: Phaser.GameObjects.Text;
   private gameOverText: Phaser.GameObjects.Text;
-  private bombs:Phaser.GameObjects.Group;
+  private bombs: Phaser.GameObjects.Group;
 
   constructor() {
     super({ key: 'GameScene' });
@@ -164,7 +165,15 @@ export class GameScene extends Scene {
     //キー入力によってプレイヤーの位置を更新
     this.player.update();
     if (this.player.placingBomb()) {
-      this.bombs.create(this.player.x, this.player.y, "bomb");
+      const bomb = this.bombs.create(
+        this.player.x,
+        this.player.y,
+        'bomb'
+      );
+      window.setTimeout(() => {
+        bomb.disableBody(true, true);
+        this.player.increaseBombCounter();
+      }, 1000);
     }
     //敵の位置を更新
     this.enemies.getChildren().forEach((e) => e.update());

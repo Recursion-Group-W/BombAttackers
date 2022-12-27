@@ -103,4 +103,7 @@ export class Player extends Character {
     }
     return false;
   }
+  public increaseBombCounter() {
+    this.bombCounter++;
+  }
 }
