@@ -13,6 +13,7 @@ export class GameScene extends Scene {
   private scoreText: Phaser.GameObjects.Text;
   private stockText: Phaser.GameObjects.Text;
   private gameOverText: Phaser.GameObjects.Text;
+  private cursors; // 上、下、左、右、スペース、シフトのキーを含むオブジェクトを作成して返す。
 
   constructor() {
     super({ key: 'GameScene' });
@@ -70,9 +71,17 @@ export class GameScene extends Scene {
     blockLayer.setCollisionByExclusion([-1], true);
 
     //ステージマップの境界を設定
+    // this.physics.world.setBounds(
+    //   0,
+    //   0,
+    //   groundLayer.width,
+    //   groundLayer.height
+    // );
     this.physics.world.bounds.width = groundLayer.width;
     this.physics.world.bounds.height = groundLayer.height;
+
     //ステージマップの衝突を有効にする。(left, right, up, down)
+    //ゲームの端から外に消えるのを防ぐ
     this.physics.world.setBoundsCollision(
       true,
       true,
@@ -154,18 +163,21 @@ export class GameScene extends Scene {
     //     //すり抜けた時の処理(残機を減らす、アイテム取得)
     //   }
     // );
+
+    // 上、下、左、右、スペース、シフトのキーを含むオブジェクトを作成
+    this.cursors = this.input.keyboard.createCursorKeys();
   }
 
   update() {
     //キー入力によってプレイヤーの位置を更新
-    this.player.update();
+    this.player.update(this.cursors);
     if (this.player.placingBomb()) {
       const bomb = new Bomb({
         scene: this,
         x: this.player.x,
         y: this.player.y,
       });
-    };
+    }
     //敵の位置を更新
     this.enemies.getChildren().forEach((e) => e.update());
   }
@@ -173,92 +185,92 @@ export class GameScene extends Scene {
   //アニメーション設定
   initAnimation() {
     //アニメーションマネージャー
-    anims.create({
+    this.anims.create({
       key: 'player-right',
       frameRate: 10,
       repeat: 0,
-      frames: anims.generateFrameNumbers('player', {
+      frames: this.anims.generateFrameNumbers('player', {
         start: 5,
         end: 7,
       }),
     });
-    anims.create({
+    this.anims.create({
       key: 'player-turn-right',
       frameRate: 10,
       repeat: 0,
       frames: [{ key: 'player', frame: 4 }],
     });
-    anims.create({
+    this.anims.create({
       key: 'player-down',
       frameRate: 10,
       repeat: 0,
-      frames: anims.generateFrameNumbers('player', {
+      frames: this.anims.generateFrameNumbers('player', {
         start: 2,
         end: 3,
       }),
     });
-    anims.create({
+    this.anims.create({
       key: 'player-turn-down',
       frameRate: 10,
       repeat: 0,
       frames: [{ key: 'player', frame: 1 }],
     });
-    anims.create({
+    this.anims.create({
       key: 'player-up',
       frameRate: 10,
       repeat: 0,
-      frames: anims.generateFrameNumbers('player', {
+      frames: this.anims.generateFrameNumbers('player', {
         start: 8,
         end: 9,
       }),
     });
-    anims.create({
+    this.anims.create({
       key: 'player-turn-up',
       frameRate: 10,
       repeat: 0,
       frames: [{ key: 'player', frame: 0 }],
     });
 
-    anims.create({
+    this.anims.create({
       key: 'enemy-right',
       frameRate: 10,
       repeat: -1,
-      frames: anims.generateFrameNumbers('enemy', {
+      frames: this.anims.generateFrameNumbers('enemy', {
         start: 5,
         end: 7,
       }),
     });
-    anims.create({
+    this.anims.create({
       key: 'enemy-turn-right',
       frameRate: 10,
       repeat: 0,
       frames: [{ key: 'player', frame: 4 }],
     });
-    anims.create({
+    this.anims.create({
       key: 'enemy-down',
       frameRate: 10,
       repeat: -1,
-      frames: anims.generateFrameNumbers('enemy', {
+      frames: this.anims.generateFrameNumbers('enemy', {
         start: 2,
         end: 3,
       }),
     });
-    anims.create({
+    this.anims.create({
       key: 'enemy-turn-down',
       frameRate: 10,
       repeat: 0,
       frames: [{ key: 'enemy', frame: 1 }],
     });
-    anims.create({
+    this.anims.create({
       key: 'enemy-up',
       frameRate: 10,
       repeat: -1,
-      frames: anims.generateFrameNumbers('enemy', {
+      frames: this.anims.generateFrameNumbers('enemy', {
         start: 8,
         end: 9,
       }),
     });
-    anims.create({
+    this.anims.create({
       key: 'enemy-turn-up',
       frameRate: 10,
       repeat: 0,

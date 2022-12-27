@@ -1,8 +1,6 @@
 import { Character } from './character';
 
 export class Player extends Character {
-  private cursors: Phaser.Types.Input.Keyboard.CursorKeys;
-
   constructor(params: {
     scene: Phaser.Scene;
     x: number;
@@ -10,9 +8,7 @@ export class Player extends Character {
   }) {
     super(params, 'player');
     this.setSpeed(120);
-    // 上、下、左、右、スペース、シフトのキーを含むオブジェクトを作成して返す。
-    this.cursors =
-      params.scene.input.keyboard.createCursorKeys();
+
     this.bombCounter = 1;
 
     params.scene.add.existing(this);
@@ -23,12 +19,16 @@ export class Player extends Character {
     this.setStock(3);
   }
 
-  update() {
-    this.handleInput();
+  //updateメソッドで呼び出して、動きが継続的に更新されるようにする
+  update(cursors: Phaser.Types.Input.Keyboard.CursorKeys) {
+    this.handleInput(cursors);
   }
 
   //敵とぶつかった時
-  collideWithEnemy(stockText: Phaser.GameObjects.Text, gameOverText: Phaser.GameObjects.Text) {
+  collideWithEnemy(
+    stockText: Phaser.GameObjects.Text,
+    gameOverText: Phaser.GameObjects.Text
+  ) {
     this.scene.cameras.main.shake(1000, 0.001);
     this.setTintFill(0xff0000);
     //残機を減らす
@@ -56,20 +56,22 @@ export class Player extends Character {
     }
   }
 
-  handleInput() {
-    if (this.cursors.left.isDown) {
+  handleInput(
+    cursors: Phaser.Types.Input.Keyboard.CursorKeys
+  ) {
+    if (cursors.left.isDown) {
       this.anims.play('player-right', true);
       this.setDirection(3);
       this.setVelocity(-this.getSpeed(), 0);
-    } else if (this.cursors.right.isDown) {
+    } else if (cursors.right.isDown) {
       this.anims.play('player-right', true);
       this.setDirection(1);
       this.setVelocity(this.getSpeed(), 0);
-    } else if (this.cursors.down.isDown) {
+    } else if (cursors.down.isDown) {
       this.anims.play('player-down', true);
       this.setDirection(2);
       this.setVelocity(0, this.getSpeed());
-    } else if (this.cursors.up.isDown) {
+    } else if (cursors.up.isDown) {
       this.anims.play('player-up', true);
       this.setDirection(0);
       this.setVelocity(0, -this.getSpeed());
