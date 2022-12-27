@@ -34,6 +34,7 @@ export default function Home() {
         >
           <h1>Game Start!!</h1>
         </Link>
+        <a href="https://jp.freepik.com/free-vector/explosion-process-set-with-explosion-stages-symbols-cartoon-vector-illustration_4431352.htm#query=sprite%20animation%20explode&position=8&from_view=search&track=ais">著作者：macrovector_official</a>／出典：Freepik
         <ProTip />
         <Copyright />
       </Box>

@@ -15,6 +15,7 @@ export class GameScene extends Scene {
   private scoreText: Phaser.GameObjects.Text;
   private stockText: Phaser.GameObjects.Text;
   private gameOverText: Phaser.GameObjects.Text;
+  private explode:Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
   private bombs: Phaser.GameObjects.Group;
   private bombLog: {
     x: number;
@@ -193,7 +194,10 @@ export class GameScene extends Scene {
         this.bombLog.existed = true;
         this.player.decreaseBombCounter();
         bomb.anims.play('bomb-anime', true);
+        // this.explode = this.physics.add.sprite(bomb.x, bomb.y, "explode");
+
         window.setTimeout(() => {
+          // this.explode.anims.play('explode-anime', true);
           this.bombLog.x = bomb.x;
           this.bombLog.y = bomb.y;
           bomb.destroy();
@@ -307,6 +311,15 @@ export class GameScene extends Scene {
       frames: this.anims.generateFrameNumbers('bomb', {
         start: 0,
         end: 7,
+      }),
+    });
+    this.anims.create({
+      key: 'explode-anime',
+      frameRate: 20,
+      repeat: 0,
+      frames: this.anims.generateFrameNumbers('explode', {
+        start: 0,
+        end: 8,
       }),
     });
   }
