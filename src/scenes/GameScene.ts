@@ -29,7 +29,7 @@ export class GameScene extends Scene {
     // this.enemies = [],
     this.isGameOver = false,
     this.isGameClear = false,
-    this.stageName = "first",
+    this.stageName = "first"
     // とりあえず残機を４に設定
     // this.player.setRemainingLives = 4
   }
