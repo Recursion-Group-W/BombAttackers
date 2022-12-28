@@ -11,6 +11,6 @@ export class VolcanoLowEnemy extends GenericLowEnemy {
     stock: number,
     initialMode: string
   ) {
-    super(params, speed, stock, initialMode);
+    super(params, spriteKey, speed, stock, initialMode);
   }
 }

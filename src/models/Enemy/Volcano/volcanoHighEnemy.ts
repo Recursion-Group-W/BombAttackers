@@ -1,6 +1,6 @@
-import { GenericMidEnemy } from '../Generic/genericMidEnemy';
+import { GenericHighEnemy } from '../Generic/genericHighEnemy';
 
-export class VolcanoMidEnemy extends GenericMidEnemy {
+export class VolcanoHighEnemy extends GenericHighEnemy {
   constructor(
     params: {
       scene: Phaser.Scene;
