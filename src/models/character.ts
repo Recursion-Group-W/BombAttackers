@@ -10,7 +10,7 @@ interface GameObject {
   get getSpeed(): number; //速さを取得
   get getRemainingLives(): number; //残機を取得
   // getHP(): number;
-  get getIsAlive(): boolean; //残機があるかどうか
+  isAlive(): boolean; //残機があるかどうか
   set setDirection(value: number); //向きを設定
   set setSpeed(value: number); //速さを設定
   set setRemainingLives(value: number); //残機を設定
@@ -21,13 +21,13 @@ export class Character
   extends Phaser.Physics.Arcade.Sprite
   implements GameObject
 {
-  private id: number = 0;
-  private characterName: string = "NoName";
+  private id = 0;
+  private characterName = "NoName";
   // private img: string;
-  private speed: number = 0;
+  private speed = 0;
   // 0:up, 1:right, 2:down, 3:left
-  private direction: number = 2;
-  private remainingLives: number = 0;
+  private direction = 2;
+  private remainingLives = 0;
 
   constructor(
     params: {

@@ -1,8 +1,8 @@
 import { Character } from './character';
-import { Bomb } from './bomb';
 
 export class Player extends Character {
   private cursors: Phaser.Types.Input.Keyboard.CursorKeys;
+  private bombCounter: number;
   private playerColor:string;
   private bombCapacity:number;
   private bombPower:number;
@@ -18,8 +18,7 @@ export class Player extends Character {
     // 上、下、左、右、スペース、シフトのキーを含むオブジェクトを作成して返す。
     this.cursors =
       params.scene.input.keyboard.createCursorKeys();
-    // note:bombカウンターはどこで定義？
-    this.bombCounter = 1;
+    this.bombCounter = 3;
 
     this.playerColor = "blue";
     this.bombCapacity = 1;
@@ -73,22 +72,22 @@ export class Player extends Character {
     if (this.cursors.left.isDown) {
       this.anims.play('player-right', true);
       this.setDirection = 3;
-      this.setVelocity(-this.getSpeed(), 0);
+      this.setVelocity(-this.getSpeed, 0);
     } else if (this.cursors.right.isDown) {
       this.anims.play('player-right', true);
-      this.setDirection(1);
-      this.setVelocity(this.getSpeed(), 0);
+      this.setDirection = 1;
+      this.setVelocity(this.getSpeed, 0);
     } else if (this.cursors.down.isDown) {
       this.anims.play('player-down', true);
       this.setDirection = 2;
-      this.setVelocity(0, this.getSpeed());
+      this.setVelocity(0, this.getSpeed);
     } else if (this.cursors.up.isDown) {
       this.anims.play('player-up', true);
       this.setDirection = 0;
-      this.setVelocity(0, -this.getSpeed());
+      this.setVelocity(0, -this.getSpeed);
     } else {
       //キーが押されていない時
-      switch (this.getDirection()) {
+      switch (this.getDirection) {
         case 0:
           this.anims.play('player-turn-up', true);
           break;
@@ -109,15 +108,13 @@ export class Player extends Character {
   }
 
   public placingBomb() {
-    if (this.cursors.space.isDown && this.bombCounter > 0) {
-      this.bombCounter--;
-      return true;
-    }
-    return false;
+    return Phaser.Input.Keyboard.JustDown(this.cursors.space) && this.bombCounter > 0;
   }
-  // 攻撃メソッド
-  public playerAttack():void{
-
+  public decreaseBombCounter() {
+    this.bombCounter--;
+  }
+  public increaseBombCounter() {
+    this.bombCounter++;
   }
 
   // setter,getter

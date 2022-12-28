@@ -20,18 +20,25 @@ export class GameScene extends Scene {
   private scoreText: Phaser.GameObjects.Text;
   private stockText: Phaser.GameObjects.Text;
   private gameOverText: Phaser.GameObjects.Text;
+  private bombs: Phaser.GameObjects.Group;
+  private bombLog: {
+    x: number;
+    y: number;
+    existed: boolean;
+  };
 
   constructor() {
     super({ key: 'GameScene' });
+    this.bombLog = {
+      x: -1,
+      y: -1,
+      existed: false,
+    };
     this.timer = 0;
-    // Playerのparamsの座標などの取得がわからないのでいじらないでおきます
-    this.player = new Player(),
-    // this.enemies = [],
     this.isGameOver = false,
     this.isGameClear = false,
     this.stageName = "first"
     // とりあえず残機を４に設定
-    // this.player.setRemainingLives = 4
   }
 
   // getter,setter
@@ -124,6 +131,7 @@ export class GameScene extends Scene {
       0,
       0
     );
+    this.bombs = this.physics.add.staticGroup();
     //ステージマップの衝突を有効にする
     groundLayer.setCollisionByExclusion([-1], true);
     wallLayer.setCollisionByExclusion([-1], true);
@@ -153,7 +161,7 @@ export class GameScene extends Scene {
         this.player = new Player({
           scene: this,
           x: object.x + 0,
-          y: object.y + 0,
+          y: object.y! + 0,
         });
       }
       if (object.name === 'enemy') {
@@ -190,6 +198,8 @@ export class GameScene extends Scene {
     this.physics.add.collider(blockLayer, this.player);
     this.physics.add.collider(wallLayer, this.enemies);
     this.physics.add.collider(blockLayer, this.enemies);
+    this.physics.add.collider(this.bombs, this.player);
+    this.physics.add.collider(this.bombs, this.enemies);
     this.physics.add.collider(
       this.player,
       this.enemies,
@@ -217,16 +227,36 @@ export class GameScene extends Scene {
     // );
   }
 
+  // 爆弾を作る関数
+
   update() {
     //キー入力によってプレイヤーの位置を更新
     this.player.update();
+
+    let bomb: any;
     if (this.player.placingBomb()) {
-      const bomb = new Bomb({
-        scene: this,
-        x: this.player.x,
-        y: this.player.y,
-      });
-    };
+      if (
+        this.bombLog.x != this.player.x ||
+        this.bombLog.y != this.player.y ||
+        !this.bombLog.existed
+      ) {
+        bomb = new Bomb({
+          scene: this,
+          x: this.player.x,
+          y: this.player.y,
+        });
+        this.bombLog.existed = true;
+        this.player.decreaseBombCounter();
+        bomb.anims.play('bomb-anime', true);
+        window.setTimeout(() => {
+          this.bombLog.x = bomb.x;
+          this.bombLog.y = bomb.y;
+          bomb.destroy();
+          this.bombLog.existed = false;
+          this.player.increaseBombCounter();
+        }, 2000);
+      }
+    }
     //敵の位置を更新
     this.enemies.getChildren().forEach((e) => e.update());
   }
@@ -234,96 +264,105 @@ export class GameScene extends Scene {
   //アニメーション設定
   initAnimation() {
     //アニメーションマネージャー
-    anims.create({
+    this.anims.create({
       key: 'player-right',
       frameRate: 10,
       repeat: 0,
-      frames: anims.generateFrameNumbers('player', {
+      frames: this.anims.generateFrameNumbers('player', {
         start: 5,
         end: 7,
       }),
     });
-    anims.create({
+    this.anims.create({
       key: 'player-turn-right',
       frameRate: 10,
       repeat: 0,
       frames: [{ key: 'player', frame: 4 }],
     });
-    anims.create({
+    this.anims.create({
       key: 'player-down',
       frameRate: 10,
       repeat: 0,
-      frames: anims.generateFrameNumbers('player', {
+      frames: this.anims.generateFrameNumbers('player', {
         start: 2,
         end: 3,
       }),
     });
-    anims.create({
+    this.anims.create({
       key: 'player-turn-down',
       frameRate: 10,
       repeat: 0,
       frames: [{ key: 'player', frame: 1 }],
     });
-    anims.create({
+    this.anims.create({
       key: 'player-up',
       frameRate: 10,
       repeat: 0,
-      frames: anims.generateFrameNumbers('player', {
+      frames: this.anims.generateFrameNumbers('player', {
         start: 8,
         end: 9,
       }),
     });
-    anims.create({
+    this.anims.create({
       key: 'player-turn-up',
       frameRate: 10,
       repeat: 0,
       frames: [{ key: 'player', frame: 0 }],
     });
 
-    anims.create({
+    this.anims.create({
       key: 'enemy-right',
       frameRate: 10,
       repeat: -1,
-      frames: anims.generateFrameNumbers('enemy', {
+      frames: this.anims.generateFrameNumbers('enemy', {
         start: 5,
         end: 7,
       }),
     });
-    anims.create({
+    this.anims.create({
       key: 'enemy-turn-right',
       frameRate: 10,
       repeat: 0,
       frames: [{ key: 'player', frame: 4 }],
     });
-    anims.create({
+    this.anims.create({
       key: 'enemy-down',
       frameRate: 10,
       repeat: -1,
-      frames: anims.generateFrameNumbers('enemy', {
+      frames: this.anims.generateFrameNumbers('enemy', {
         start: 2,
         end: 3,
       }),
     });
-    anims.create({
+    this.anims.create({
       key: 'enemy-turn-down',
       frameRate: 10,
       repeat: 0,
       frames: [{ key: 'enemy', frame: 1 }],
     });
-    anims.create({
+    this.anims.create({
       key: 'enemy-up',
       frameRate: 10,
       repeat: -1,
-      frames: anims.generateFrameNumbers('enemy', {
+      frames: this.anims.generateFrameNumbers('enemy', {
         start: 8,
         end: 9,
       }),
     });
-    anims.create({
+    this.anims.create({
       key: 'enemy-turn-up',
       frameRate: 10,
       repeat: 0,
       frames: [{ key: 'enemy', frame: 0 }],
+    });
+    this.anims.create({
+      key: 'bomb-anime',
+      frameRate: 10,
+      repeat: 2,
+      frames: this.anims.generateFrameNumbers('bomb', {
+        start: 0,
+        end: 7,
+      }),
     });
   }
 

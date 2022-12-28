@@ -11,7 +11,7 @@ export class Enemy extends Character {
     y: number;
   }) {
     super(params, 'enemy');
-    this.setSpeed(80);
+    this.setSpeed = 80;
 
     //Arcade Physicsをゲームオブジェクトに追加
     params.scene.physics.world.enable(this);
@@ -19,9 +19,9 @@ export class Enemy extends Character {
     params.scene.add.existing(this);
 
     //最初に動く方向をランダムにセット
-    this.setDirection(getRandomInt(0, 4));
+    this.setDirection = getRandomInt(0, 4);
 
-    this.setStock(2);
+    this.setRemainingLives = 2;
   }
 
   //GameObjectによってオーバーライドされる更新メソッド
@@ -63,7 +63,7 @@ export class Enemy extends Character {
   //プレイヤーと衝突した時、反対方向に向きを変える
   collideWithPlayer() {
     const opposite = this.getOppositeDirection(
-      this.getDirection()
+      this.getDirection
     );
     this.moveByDirection(opposite);
   }
@@ -71,17 +71,15 @@ export class Enemy extends Character {
   //爆風と重なった時
   overlapExplosion() {
     //残機を減らす
-    this.setStock(this.getStock() - 1);
+    this.setRemainingLives = this.getRemainingLives - 1;
     //残機が0になったらオブジェクトを削除
-    if (this.getStock() <= 0) {
+    if (this.getRemainingLives <= 0) {
       this.disableBody(true, true);
     }
   }
 
   //追跡する動き
-  chasePlayer(player :Player){
-    
-  }
+  chasePlayer(player: Player) {}
 
   //X方向の単調な動き
   private moveMonoX() {
@@ -94,7 +92,7 @@ export class Enemy extends Character {
     //速度が0(障害物にぶつかったorゲームスタート時) → 方向転換する
     if (this.body.velocity.x === 0) {
       const opposite = this.getOppositeDirection(
-        this.getDirection()
+        this.getDirection
       );
       this.moveByDirection(opposite);
     }
@@ -111,7 +109,7 @@ export class Enemy extends Character {
     //速度が0(障害物にぶつかったorゲームスタート時) → 方向転換する
     if (this.body.velocity.y === 0) {
       const opposite = this.getOppositeDirection(
-        this.getDirection()
+        this.getDirection
       );
       this.moveByDirection(opposite);
     }
@@ -155,27 +153,27 @@ export class Enemy extends Character {
   }
 
   private moveUp() {
-    this.setDirection(0);
-    this.setVelocity(0, -this.getSpeed());
+    this.setDirection = 0;
+    this.setVelocity(0, -this.getSpeed);
     this.anims.play('enemy-up', true);
   }
 
   private moveRight() {
-    this.setDirection(1);
-    this.setVelocity(this.getSpeed(), 0);
+    this.setDirection = 1;
+    this.setVelocity(this.getSpeed, 0);
     this.flipX = false;
     this.anims.play('enemy-right', true);
   }
 
   private moveDown() {
-    this.setDirection(2);
-    this.setVelocity(0, this.getSpeed());
+    this.setDirection = 2;
+    this.setVelocity(0, this.getSpeed);
     this.anims.play('enemy-down', true);
   }
 
   private moveLeft() {
-    this.setDirection(3);
-    this.setVelocity(-this.getSpeed(), 0);
+    this.setDirection = 3;
+    this.setVelocity(-this.getSpeed, 0);
     this.flipX = true;
     this.anims.play('enemy-right', true);
   }
