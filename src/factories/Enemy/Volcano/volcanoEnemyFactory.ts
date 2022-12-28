@@ -1,6 +1,9 @@
+import { HighEnemy } from '../../../models/Enemy/interfaces/highEnemy';
 import { LowEnemy } from '../../../models/Enemy/interfaces/lowEnemy';
 import { MidEnemy } from '../../../models/Enemy/interfaces/midEnemy';
+import { VolcanoHighEnemy } from '../../../models/Enemy/Volcano/volcanoHighEnemy';
 import { VolcanoLowEnemy } from '../../../models/Enemy/Volcano/volcanoLowEnemy';
+import { VolcanoMidEnemy } from '../../../models/Enemy/Volcano/volcanoMidEnemy';
 import { GameScene } from '../../../scenes/GameScene';
 import { EnemyUtil } from '../../../utils/enemy.util';
 import { GenericEnemyFactory } from '../Generic/genericEnemyFactory';
@@ -11,7 +14,7 @@ export class VolcanoEnemyFactory
   extends GenericEnemyFactory
   implements EnemyFactory
 {
-  private readonly SpriteKey = 'enemy';
+  static SpriteKey = 'volcanoEnemy';
   constructor() {
     super();
   }
@@ -21,11 +24,11 @@ export class VolcanoEnemyFactory
     scene: GameScene,
     count: number
   ): void {
-    //敵キャラのグループをセット
-    scene.setEnemies();
+    //敵キャラのグループを初期化
+    scene.initEnemies();
 
     for (let i = 0; i < count; i++) {
-      this.createLowEnemy(scene);
+      scene.enemies.add(this.createLowEnemy(scene));
     }
   }
 
@@ -35,10 +38,22 @@ export class VolcanoEnemyFactory
     count: number
   ): void {
     //敵キャラのグループをセット
-    scene.setEnemies();
+    scene.initEnemies();
 
     for (let i = 0; i < count; i++) {
-      this.createMidEnemy(scene);
+      scene.enemies.add(this.createMidEnemy(scene));
+    }
+  }
+  //指定した数のHighEnemyをSceneに配置する
+  createHighEnemiesByCount(
+    scene: GameScene,
+    count: number
+  ): void {
+    //敵キャラのグループをセット
+    scene.initEnemies();
+
+    for (let i = 0; i < count; i++) {
+      scene.enemies.add(this.createHighEnemy(scene));
     }
   }
 
@@ -51,7 +66,7 @@ export class VolcanoEnemyFactory
         x: position.x,
         y: position.y,
       },
-      'enemy',
+      VolcanoEnemyFactory.SpriteKey,
       this.EnemyMap['low'].speed,
       this.EnemyMap['low'].stock,
       this.EnemyMap['low'].initialMode
@@ -67,10 +82,26 @@ export class VolcanoEnemyFactory
         x: position.x,
         y: position.y,
       },
-      'enemy',
+      VolcanoEnemyFactory.SpriteKey,
       this.EnemyMap['mid'].speed,
       this.EnemyMap['mid'].stock,
       this.EnemyMap['mid'].initialMode
+    );
+  }
+
+  createHighEnemy(scene: GameScene): HighEnemy {
+    const position = EnemyUtil.getRandomPosition(scene);
+
+    return new VolcanoHighEnemy(
+      {
+        scene: scene,
+        x: position.x,
+        y: position.y,
+      },
+      VolcanoEnemyFactory.SpriteKey,
+      this.EnemyMap['high'].speed,
+      this.EnemyMap['high'].stock,
+      this.EnemyMap['high'].initialMode
     );
   }
 }
