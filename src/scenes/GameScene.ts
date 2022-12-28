@@ -2,26 +2,86 @@ import { Scene } from 'phaser';
 import { Enemy } from '../models/enemy';
 import { Player } from '../models/player';
 import { Bomb } from '../models/bomb';
+import { View } from '../view/view';
 
 export class GameScene extends Scene {
   private width: number; //描画範囲(width)
   private height: number; //描画範囲(width)
   private player: Player; //プレイヤー
   private enemies: Phaser.GameObjects.Group; //敵キャラのグループ
+  // note:mapはcurrentMapとそれ以外みたいな保持の仕方もあり？
   private map: Phaser.Tilemaps.Tilemap; //タイルマップ（ステージ）
+  private timer: number;
   private level: number; //ステージレベル
+  private isGameOver: boolean;
+  private isGameClear: boolean;
+  // 絵柄のデザインをこだわるならidで判別するよりstring型が良い？exモナリザ、洞窟
+  private stageName: string;
   private scoreText: Phaser.GameObjects.Text;
   private stockText: Phaser.GameObjects.Text;
   private gameOverText: Phaser.GameObjects.Text;
 
   constructor() {
     super({ key: 'GameScene' });
+    this.timer = 0;
+    // Playerのparamsの座標などの取得がわからないのでいじらないでおきます
+    this.player = new Player(),
+    // this.enemies = [],
+    this.isGameOver = false,
+    this.isGameClear = false,
+    this.stageName = "first",
+    // とりあえず残機を４に設定
+    // this.player.setRemainingLives = 4
+  }
+
+  // getter,setter
+  public get getWidth():number{
+    return this.width;
+  }
+
+  public set setWidth(newWidth:number){
+    this.width = newWidth;
+  }
+
+  public get getHeight():number{
+    return this.height;
+  }
+
+  public set setHeight(newHeight:number){
+    this.height = newHeight;
+  }
+
+  public get getIsGameOver():boolean{
+    return this.isGameOver;
+  }
+
+  public set setIsGameOver(gameStatus:boolean){
+    this.isGameOver = gameStatus;
+  }
+
+  public get getIsGameClear():boolean{
+    return this.isGameClear;
+  }
+
+  public set setIsGameClear(gameStatus:boolean){
+    this.isGameClear = gameStatus;
+  }
+
+  public get getStageName():string{
+    return this.stageName;
+  }
+
+  public set setStageName(nextStage:string){
+    this.stageName = nextStage;
   }
 
   //init, preload, create, updateはSceneに用意されているメソッドなので、オーバーライドする
   init(data: { stageLevel: number }) {
     this.level = data.stageLevel;
   }
+  // note:widthやheightの再宣言の理由
+  // note:データ型の理由
+  // note:コンストラクタで行わない理由
 
   preload() {
     const width: string | number =
@@ -84,6 +144,7 @@ export class GameScene extends Scene {
     this.initAnimation();
 
     //敵キャラたち
+    // note:12/28 コンストラクターでやらない理由
     this.enemies = this.add.group();
 
     const objectLayer = this.map.getObjectLayer('objects');
@@ -110,7 +171,7 @@ export class GameScene extends Scene {
     this.stockText = this.add.text(
       16,
       0,
-      `Stock ${this.player.getStock()}`,
+      `Stock ${this.player.getRemainingLives}`,
       {
         fontSize: '32px',
       }
@@ -265,4 +326,38 @@ export class GameScene extends Scene {
       frames: [{ key: 'enemy', frame: 0 }],
     });
   }
+
+  private activateGameOverScreen():void{
+    if (this.player.getRemainingLives <= 0 && !this.isGameOver) {
+        View.renderGameOverPage()
+    }
 }
+
+  private activateGameClear():void{
+      // if (ゲームクリアの条件);
+      if (this.stageName == "second") this.setIsGameClear = true;
+  }
+
+  private changeStage(nextStage:string):void{
+      if (this.isGameClear) {
+          this.setStageName = nextStage
+          this.activateNewScreen()
+      }
+  }
+
+  private activateNewScreen():void{
+      switch(this.stageName){
+          case "first":
+              View.renderFirstStagePage();
+              break;
+          case "second":
+              View.renderSecondStagePage();
+              break;
+      }
+  }
+
+  private set setPlayerColor(color:string){
+      // idをkey、colorをvalueにして色を配る？
+  }
+}
+
