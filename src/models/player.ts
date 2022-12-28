@@ -3,6 +3,10 @@ import { Character } from './character';
 export class Player extends Character {
   private cursors: Phaser.Types.Input.Keyboard.CursorKeys;
   private bombCounter: number;
+  private playerColor:string;
+  private bombCapacity:number;
+  private bombPower:number;
+  private playerScore:number;
 
   constructor(params: {
     scene: Phaser.Scene;
@@ -10,18 +14,24 @@ export class Player extends Character {
     y: number;
   }) {
     super(params, 'player');
-    this.setSpeed(120);
+    this.setSpeed = 120;
     // 上、下、左、右、スペース、シフトのキーを含むオブジェクトを作成して返す。
     this.cursors =
       params.scene.input.keyboard.createCursorKeys();
     this.bombCounter = 3;
+
+    this.playerColor = "blue";
+    this.bombCapacity = 1;
+    this.bombPower = 1;
+    this.playerScore = 0
 
     params.scene.add.existing(this);
     params.scene.physics.world.enable(this);
 
     this.body.maxVelocity = <any>{ x: 250, y: 250 };
 
-    this.setStock(3);
+    // 初期設定の残機は３
+    this.setRemainingLives = 3;
   }
 
   update() {
@@ -33,13 +43,14 @@ export class Player extends Character {
     this.scene.cameras.main.shake(1000, 0.001);
     this.setTintFill(0xff0000);
     //残機を減らす
-    this.setStock(this.getStock() - 1);
+    this.setRemainingLives = this.getRemainingLives - 1;
 
     //残機の表示を更新
-    stockText.setText('Stock: ' + this.getStock());
+    stockText.setText('Stock: ' + this.getRemainingLives);
 
     //残機が0になったらGAME OVER
-    if (this.getStock() <= 0) {
+    //note:0未満では？
+    if (this.getRemainingLives <= 0) {
       // this.disableBody(true, true);
       gameOverText.setText('GAME OVER');
       setTimeout(() => this.scene.scene.restart(), 1000);
@@ -50,9 +61,9 @@ export class Player extends Character {
   overlapExplosion() {
     this.scene.cameras.main.shake(1000, 0.001);
     //残機を減らす
-    this.setStock(this.getStock() - 1);
+    this.setRemainingLives = this.getRemainingLives - 1;
     //残機が0になったらオブジェクトを削除
-    if (this.getStock() <= 0) {
+    if (this.getRemainingLives <= 0) {
       this.disableBody(true, true);
     }
   }
@@ -60,23 +71,23 @@ export class Player extends Character {
   handleInput() {
     if (this.cursors.left.isDown) {
       this.anims.play('player-right', true);
-      this.setDirection(3);
-      this.setVelocity(-this.getSpeed(), 0);
+      this.setDirection = 3;
+      this.setVelocity(-this.getSpeed, 0);
     } else if (this.cursors.right.isDown) {
       this.anims.play('player-right', true);
-      this.setDirection(1);
-      this.setVelocity(this.getSpeed(), 0);
+      this.setDirection = 1;
+      this.setVelocity(this.getSpeed, 0);
     } else if (this.cursors.down.isDown) {
       this.anims.play('player-down', true);
-      this.setDirection(2);
-      this.setVelocity(0, this.getSpeed());
+      this.setDirection = 2;
+      this.setVelocity(0, this.getSpeed);
     } else if (this.cursors.up.isDown) {
       this.anims.play('player-up', true);
-      this.setDirection(0);
-      this.setVelocity(0, -this.getSpeed());
+      this.setDirection = 0;
+      this.setVelocity(0, -this.getSpeed);
     } else {
       //キーが押されていない時
-      switch (this.getDirection()) {
+      switch (this.getDirection) {
         case 0:
           this.anims.play('player-turn-up', true);
           break;
@@ -93,7 +104,7 @@ export class Player extends Character {
     }
 
     //左に進むときは右方向の動きを反転させる
-    this.flipX = this.getDirection() === 3;
+    this.flipX = this.getDirection === 3;
   }
 
   public placingBomb() {
@@ -105,6 +116,37 @@ export class Player extends Character {
   public increaseBombCounter() {
     this.bombCounter++;
   }
-  
-  // 爆弾を作る関数
+
+  // setter,getter
+  public get getPlayerColor(): string{
+    return this.playerColor;
+  }
+
+  public set setPlayerColor(color:string){
+    this.playerColor = color
+  }
+
+  public get getBombCapacity(): number{
+    return this.bombCapacity;
+  }
+
+  public set setBombCapacity(newCapacity:number){
+    this.bombCapacity = newCapacity;
+  }
+
+  public get getBombPower(): number{
+    return this.bombPower;
+  }
+
+  public set setBombPower(newPower:number){
+    this.bombPower = newPower;
+  }
+
+  public get getPlayerScore(): number{
+    return this.playerScore;
+  }
+
+  public set setPlayerScore(newScore:number){
+    this.playerScore = newScore;
+  }
 }

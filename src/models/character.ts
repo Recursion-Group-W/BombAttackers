@@ -5,15 +5,15 @@ type Position = {
 
 interface GameObject {
   //   getName(): string;
-  getDirection(): number; //向きを取得
-  getPosition(): Position; //位置を取得
-  getSpeed(): number; //速さを取得
-  getStock(): number; //残機を取得
+  get getDirection(): number; //向きを取得
+  get getPosition(): Position; //位置を取得
+  get getSpeed(): number; //速さを取得
+  get getRemainingLives(): number; //残機を取得
   // getHP(): number;
   isAlive(): boolean; //残機があるかどうか
-  setDirection(value: number): void; //向きを設定
-  setSpeed(value: number): void; //速さを設定
-  setStock(value: number): void; //残機を設定
+  set setDirection(value: number); //向きを設定
+  set setSpeed(value: number); //速さを設定
+  set setRemainingLives(value: number); //残機を設定
   accelerate(value: number): void; //加速
 }
 
@@ -21,15 +21,13 @@ export class Character
   extends Phaser.Physics.Arcade.Sprite
   implements GameObject
 {
-  private id: number;
-  private characterName: string;
-  //   private img: string;
-
-  private speed: number = 0;
+  private id = 0;
+  private characterName = "NoName";
+  // private img: string;
+  private speed = 0;
   // 0:up, 1:right, 2:down, 3:left
-  private direction: number = 2;
-
-  private stock: number = 0;
+  private direction = 2;
+  private remainingLives = 0;
 
   constructor(
     params: {
@@ -42,34 +40,38 @@ export class Character
     super(params.scene, params.x, params.y, type);
   }
 
-  getDirection() {
+  public get getID():number{
+    return this.id;
+  }
+  public set setID(ID:number){
+    this.id = ID;
+  }
+  public get getDirection():number {
     return this.direction;
   }
-
-  getPosition(): Position {
+  public get getPosition(): Position {
     return { x: this.x, y: this.y };
   }
-  getSpeed(): number {
+  public get getSpeed(): number {
     return this.speed;
   }
-  setSpeed(value: number): void {
+  public set setSpeed(value: number) {
     this.speed = value;
   }
-  getStock(): number {
-    return this.stock;
+  public get getRemainingLives(): number {
+    return this.remainingLives;
   }
-  isAlive(): boolean {
-    return this.stock !== 0;
+  public isAlive(): boolean {
+    return this.remainingLives >= 0;
   }
-
-  setDirection(value: number) {
+  public set setDirection(value: number) {
     this.direction = value;
   }
-
-  setStock(value: number): void {
-    this.stock = value;
+  public set setRemainingLives(value: number){
+    this.remainingLives = value;
   }
-  accelerate(value: number): void {
-    this.setSpeed(this.getSpeed() + value);
+
+  public accelerate(value: number): void {
+    this.setSpeed = this.getSpeed + value;
   }
 }
