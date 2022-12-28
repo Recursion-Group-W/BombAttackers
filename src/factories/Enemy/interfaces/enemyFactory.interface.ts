@@ -1,6 +1,6 @@
-import { HighEnemy } from '../../../models/Enemy/interfaces/highEnemy';
-import { LowEnemy } from '../../../models/Enemy/interfaces/lowEnemy';
-import { MidEnemy } from '../../../models/Enemy/interfaces/midEnemy';
+import { HighEnemy } from '../../../models/Enemy/interfaces/highEnemy.interface';
+import { LowEnemy } from '../../../models/Enemy/interfaces/lowEnemy.interface';
+import { MidEnemy } from '../../../models/Enemy/interfaces/midEnemy.interface';
 
 export interface EnemyFactory {
   //指定した数のLowEnemyをSceneに配置する

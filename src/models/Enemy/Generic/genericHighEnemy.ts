@@ -1,4 +1,4 @@
-import { HighEnemy } from '../interfaces/highEnemy';
+import { HighEnemy } from '../interfaces/highEnemy.interface';
 import { GenericLowEnemy } from './genericLowEnemy';
 
 export class GenericHighEnemy

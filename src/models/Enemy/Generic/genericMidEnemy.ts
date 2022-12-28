@@ -1,4 +1,4 @@
-import { MidEnemy } from '../interfaces/midEnemy';
+import { MidEnemy } from '../interfaces/midEnemy.interface';
 import { GenericLowEnemy } from './genericLowEnemy';
 
 export class GenericMidEnemy
