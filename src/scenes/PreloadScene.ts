@@ -19,7 +19,7 @@ export class PreloadScene extends Phaser.Scene {
       }
     );
     this.load.spritesheet(
-      'enemy',
+      'volcanoEnemy',
       '/assets/enemy_spritesheet_fixed.png',
       {
         frameWidth: 32,
