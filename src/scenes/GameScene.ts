@@ -34,50 +34,50 @@ export class GameScene extends Scene {
       existed: false,
     };
     this.timer = 0;
-    this.isGameOver = false,
-    this.isGameClear = false,
-    this.stageName = "first"
+    (this.isGameOver = false),
+      (this.isGameClear = false),
+      (this.stageName = 'first');
     // とりあえず残機を４に設定
   }
 
   // getter,setter
-  public get getWidth():number{
+  public get getWidth(): number {
     return this.width;
   }
 
-  public set setWidth(newWidth:number){
+  public set setWidth(newWidth: number) {
     this.width = newWidth;
   }
 
-  public get getHeight():number{
+  public get getHeight(): number {
     return this.height;
   }
 
-  public set setHeight(newHeight:number){
+  public set setHeight(newHeight: number) {
     this.height = newHeight;
   }
 
-  public get getIsGameOver():boolean{
+  public get getIsGameOver(): boolean {
     return this.isGameOver;
   }
 
-  public set setIsGameOver(gameStatus:boolean){
+  public set setIsGameOver(gameStatus: boolean) {
     this.isGameOver = gameStatus;
   }
 
-  public get getIsGameClear():boolean{
+  public get getIsGameClear(): boolean {
     return this.isGameClear;
   }
 
-  public set setIsGameClear(gameStatus:boolean){
+  public set setIsGameClear(gameStatus: boolean) {
     this.isGameClear = gameStatus;
   }
 
-  public get getStageName():string{
+  public get getStageName(): string {
     return this.stageName;
   }
 
-  public set setStageName(nextStage:string){
+  public set setStageName(nextStage: string) {
     this.stageName = nextStage;
   }
 
@@ -407,37 +407,334 @@ export class GameScene extends Scene {
     });
   }
 
-  private activateGameOverScreen():void{
-    if (this.player.getRemainingLives <= 0 && !this.isGameOver) {
-        View.renderGameOverPage()
+  private activateGameOverScreen(): void {
+    if (
+      this.player.getRemainingLives <= 0 &&
+      !this.isGameOver
+    ) {
+      View.renderGameOverPage();
     }
+  }
+
+  private activateGameClear(): void {
+    // if (ゲームクリアの条件);
+    if (this.stageName == 'second')
+      this.setIsGameClear = true;
+  }
+
+  private changeStage(nextStage: string): void {
+    if (this.isGameClear) {
+      this.setStageName = nextStage;
+      this.activateNewScreen();
+    }
+  }
+
+  private activateNewScreen(): void {
+    switch (this.stageName) {
+      case 'first':
+        View.renderFirstStagePage();
+        break;
+      case 'second':
+        View.renderSecondStagePage();
+        break;
+    }
+  }
+
+  private set setPlayerColor(color: string) {
+    // idをkey、colorをvalueにして色を配る？
+  }
 }
 
-  private activateGameClear():void{
-      // if (ゲームクリアの条件);
-      if (this.stageName == "second") this.setIsGameClear = true;
-  }
+// export class GameScene extends Scene {
+//   static TileSize = 16;
+//   private width: number; //描画範囲(width)
+//   private height: number; //描画範囲(width)
+//   private player: Player; //プレイヤー
+//   private enemies: Phaser.GameObjects.Group; //敵キャラのグループ
+//   private map: Phaser.Tilemaps.Tilemap; //タイルマップ（ステージ）
+//   private level: number; //ステージレベル
+//   private scoreText: Phaser.GameObjects.Text;
+//   private stockText: Phaser.GameObjects.Text;
+//   private gameOverText: Phaser.GameObjects.Text;
+//   private cursors; // 上、下、左、右、スペース、シフトのキーを含むオブジェクトを作成して返す。
 
-  private changeStage(nextStage:string):void{
-      if (this.isGameClear) {
-          this.setStageName = nextStage
-          this.activateNewScreen()
-      }
-  }
+//   constructor() {
+//     super({ key: 'GameScene' });
+//   }
 
-  private activateNewScreen():void{
-      switch(this.stageName){
-          case "first":
-              View.renderFirstStagePage();
-              break;
-          case "second":
-              View.renderSecondStagePage();
-              break;
-      }
-  }
+//   //init, preload, create, updateはSceneに用意されているメソッドなので、オーバーライドする
+//   init(data: { stageLevel: number }) {
+//     this.level = data.stageLevel;
+//   }
 
-  private set setPlayerColor(color:string){
-      // idをkey、colorをvalueにして色を配る？
-  }
-}
+//   preload() {
+//     const width: string | number =
+//       this.scene.systems.game.config['width'];
+//     const height: string | number =
+//       this.scene.systems.game.config['height'];
 
+//     this.width =
+//       typeof width === 'string' ? parseInt(width) : width;
+//     this.height =
+//       typeof height === 'string'
+//         ? parseInt(height)
+//         : height;
+//   }
+
+//   create() {
+//     this.map = this.make.tilemap({
+//       key: `stage${this.level}`,
+//     });
+//     const tiles = this.map.addTilesetImage(
+//       'tileset',
+//       'tileset'
+//     );
+
+//     const groundLayer = this.map.createLayer(
+//       'ground',
+//       tiles,
+//       0,
+//       0
+//     );
+//     const wallLayer = this.map.createLayer(
+//       'wall',
+//       tiles,
+//       0,
+//       0
+//     );
+//     const blockLayer = this.map.createLayer(
+//       'blocks',
+//       tiles,
+//       0,
+//       0
+//     );
+//     //ステージマップの衝突を有効にする
+//     groundLayer.setCollisionByExclusion([-1], true);
+//     wallLayer.setCollisionByExclusion([-1], true);
+//     blockLayer.setCollisionByExclusion([-1], true);
+
+//     //ステージマップの境界を設定
+//     // this.physics.world.setBounds(
+//     //   0,
+//     //   0,
+//     //   groundLayer.width,
+//     //   groundLayer.height
+//     // );
+//     this.physics.world.bounds.width = groundLayer.width;
+//     this.physics.world.bounds.height = groundLayer.height;
+
+//     //ステージマップの衝突を有効にする。(left, right, up, down)
+//     //ゲームの端から外に消えるのを防ぐ
+//     this.physics.world.setBoundsCollision(
+//       true,
+//       true,
+//       true,
+//       true
+//     );
+
+//     //キー操作のアニメーション実行
+//     this.initAnimation();
+
+//     //敵キャラたち
+//     this.enemies = this.add.group();
+//     this.enemies.add(
+//       new VolcanoMidEnemy({
+//         scene: this,
+//         x: 300,
+//         y: 300,
+//       })
+//     );
+
+//     const objectLayer = this.map.getObjectLayer('objects');
+//     objectLayer.objects.forEach((object) => {
+//       if (object.name === 'player') {
+//         this.player = new Player({
+//           scene: this,
+//           x: object.x + 0,
+//           y: object.y + 0,
+//         });
+//       }
+//       // if (object.name === 'enemy') {
+//       //   this.enemies.add(
+//       //     new Enemy({
+//       //       scene: this,
+//       //       x: object.x + 0,
+//       //       y: object.y + 0,
+//       //     })
+//       //   );
+//       // }
+//     });
+
+//     // 残機
+//     this.stockText = this.add.text(
+//       16,
+//       0,
+//       `Stock ${this.player.getStock()}`,
+//       {
+//         fontSize: '32px',
+//       }
+//     );
+
+//     // ゲームオーバー表示を追加する
+//     this.gameOverText = this.add.text(400, 300, '', {
+//       fontSize: '64px',
+//     });
+//     this.gameOverText.setOrigin(0.5);
+
+//     //衝突を設定
+//     // overlapはすり抜ける（爆弾,アイテム取得など）
+//     // colliderはすり抜けずに衝突する
+//     this.physics.add.collider(wallLayer, this.player);
+//     this.physics.add.collider(blockLayer, this.player);
+//     this.physics.add.collider(wallLayer, this.enemies);
+//     this.physics.add.collider(blockLayer, this.enemies);
+//     this.physics.add.collider(
+//       this.player,
+//       this.enemies,
+//       (
+//         player: Phaser.Types.Physics.Arcade.GameObjectWithBody,
+//         enemy: Phaser.Types.Physics.Arcade.GameObjectWithBody
+//       ) => {
+//         //衝突した時の処理
+//         player.collideWithEnemy(
+//           this.stockText,
+//           this.gameOverText
+//         );
+//         enemy.collideWithPlayer();
+//       },
+//       null,
+//       this
+//     );
+//     //すり抜けた時（爆弾、アイテムなど）
+//     // this.physics.add.overlap(
+//     //   this.player,
+//     //   this.bomb,
+//     //   () => {
+//     //     //すり抜けた時の処理(残機を減らす、アイテム取得)
+//     //   }
+//     // );
+
+//     // 上、下、左、右、スペース、シフトのキーを含むオブジェクトを作成
+//     this.cursors = this.input.keyboard.createCursorKeys();
+//   }
+
+//   update() {
+//     //キー入力によってプレイヤーの位置を更新
+//     this.player.update(this.cursors);
+//     // if (this.player.placingBomb()) {
+//     //   const bomb = new Bomb({
+//     //     scene: this,
+//     //     x: this.player.x,
+//     //     y: this.player.y,
+//     //   });
+//     // }
+//     //敵の位置を更新
+//     this.enemies.getChildren().forEach((e) => e.update());
+//   }
+
+//   //アニメーション設定
+//   initAnimation() {
+//     //アニメーションマネージャー
+//     this.anims.create({
+//       key: 'player-right',
+//       frameRate: 10,
+//       repeat: 0,
+//       frames: this.anims.generateFrameNumbers('player', {
+//         start: 5,
+//         end: 7,
+//       }),
+//     });
+//     this.anims.create({
+//       key: 'player-turn-right',
+//       frameRate: 10,
+//       repeat: 0,
+//       frames: [{ key: 'player', frame: 4 }],
+//     });
+//     this.anims.create({
+//       key: 'player-down',
+//       frameRate: 10,
+//       repeat: 0,
+//       frames: this.anims.generateFrameNumbers('player', {
+//         start: 2,
+//         end: 3,
+//       }),
+//     });
+//     this.anims.create({
+//       key: 'player-turn-down',
+//       frameRate: 10,
+//       repeat: 0,
+//       frames: [{ key: 'player', frame: 1 }],
+//     });
+//     this.anims.create({
+//       key: 'player-up',
+//       frameRate: 10,
+//       repeat: 0,
+//       frames: this.anims.generateFrameNumbers('player', {
+//         start: 8,
+//         end: 9,
+//       }),
+//     });
+//     this.anims.create({
+//       key: 'player-turn-up',
+//       frameRate: 10,
+//       repeat: 0,
+//       frames: [{ key: 'player', frame: 0 }],
+//     });
+
+//     this.anims.create({
+//       key: 'enemy-right',
+//       frameRate: 10,
+//       repeat: -1,
+//       frames: this.anims.generateFrameNumbers('enemy', {
+//         start: 5,
+//         end: 7,
+//       }),
+//     });
+//     this.anims.create({
+//       key: 'enemy-turn-right',
+//       frameRate: 10,
+//       repeat: 0,
+//       frames: [{ key: 'player', frame: 4 }],
+//     });
+//     this.anims.create({
+//       key: 'enemy-down',
+//       frameRate: 10,
+//       repeat: -1,
+//       frames: this.anims.generateFrameNumbers('enemy', {
+//         start: 2,
+//         end: 3,
+//       }),
+//     });
+//     this.anims.create({
+//       key: 'enemy-turn-down',
+//       frameRate: 10,
+//       repeat: 0,
+//       frames: [{ key: 'enemy', frame: 1 }],
+//     });
+//     this.anims.create({
+//       key: 'enemy-up',
+//       frameRate: 10,
+//       repeat: -1,
+//       frames: this.anims.generateFrameNumbers('enemy', {
+//         start: 8,
+//         end: 9,
+//       }),
+//     });
+//     this.anims.create({
+//       key: 'enemy-turn-up',
+//       frameRate: 10,
+//       repeat: 0,
+//       frames: [{ key: 'enemy', frame: 0 }],
+//     });
+//   }
+
+//   //敵を一体セットする
+//   setEnemy(enemy: Phaser.GameObjects.GameObject) {
+//     this.enemies.add(enemy);
+//   }
+
+//   //敵キャラのグループをセットする
+//   setEnemies() {
+//     this.enemies = this.physics.add.group();
+//   }
+// }
