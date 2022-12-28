@@ -15,7 +15,7 @@ export class GenericEnemy extends GenericCharacter {
     stock: number,
     initialMode: string
   ) {
-    super(params, 'enemy');
+    super(params, spriteKey);
     this.setSpeed(80);
 
     // //Arcade Physicsをゲームオブジェクトに追加
@@ -165,26 +165,26 @@ export class GenericEnemy extends GenericCharacter {
   private moveUp() {
     this.setDirection(0);
     this.setVelocity(0, -this.getSpeed());
-    this.anims.play('enemy-up', true);
+    this.anims.play(`${this.spriteKey}-up`, true);
   }
 
   private moveRight() {
     this.setDirection(1);
     this.setVelocity(this.getSpeed(), 0);
     this.flipX = false;
-    this.anims.play('enemy-right', true);
+    this.anims.play(`${this.spriteKey}-right`, true);
   }
 
   private moveDown() {
     this.setDirection(2);
     this.setVelocity(0, this.getSpeed());
-    this.anims.play('enemy-down', true);
+    this.anims.play(`${this.spriteKey}-down`, true);
   }
 
   private moveLeft() {
     this.setDirection(3);
     this.setVelocity(-this.getSpeed(), 0);
     this.flipX = true;
-    this.anims.play('enemy-right', true);
+    this.anims.play(`${this.spriteKey}-right`, true);
   }
 }
