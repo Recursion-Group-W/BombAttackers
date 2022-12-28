@@ -40,14 +40,16 @@ export class EnemyUtil {
     );
     return odds[randomIndex];
   }
+
+  //ランダムな座標を返すメソッド
   static getRandomPosition(scene: GameScene): Position {
     const x = EnemyUtil.getRandomInt(
       GameScene.TileSize * 2,
-      scene.getWidth() - GameScene.TileSize * 2
+      scene.getWidth - GameScene.TileSize * 2
     );
     const y = EnemyUtil.getRandomInt(
       GameScene.TileSize * 2,
-      scene.getHeight() - GameScene.TileSize * 2
+      scene.getHeight - GameScene.TileSize * 2
     );
     return { x: x, y: y };
   }
