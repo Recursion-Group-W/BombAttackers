@@ -161,7 +161,7 @@ export class GameScene extends Scene {
         this.player = new Player({
           scene: this,
           x: object.x + 0,
-          y: object.y + 0,
+          y: object.y! + 0,
         });
       }
       if (object.name === 'enemy') {
