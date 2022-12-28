@@ -3,6 +3,7 @@ import { Character } from './character';
 export class Player extends Character {
   private cursors: Phaser.Types.Input.Keyboard.CursorKeys;
   private bombCounter: number;
+  private bombPower:number;
 
   constructor(params: {
     scene: Phaser.Scene;
@@ -15,6 +16,7 @@ export class Player extends Character {
     this.cursors =
       params.scene.input.keyboard.createCursorKeys();
     this.bombCounter = 3;
+    this.bombPower = 2;
 
     params.scene.add.existing(this);
     params.scene.physics.world.enable(this);
@@ -22,6 +24,14 @@ export class Player extends Character {
     this.body.maxVelocity = <any>{ x: 250, y: 250 };
 
     this.setStock(3);
+  }
+
+  public get getBombPower() {
+    return this.bombPower;
+  }
+
+  public bombPowerUp() {
+    this.bombPower++;
   }
 
   update() {

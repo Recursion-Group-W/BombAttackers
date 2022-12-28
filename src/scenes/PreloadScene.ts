@@ -34,8 +34,8 @@ export class PreloadScene extends Phaser.Scene {
       'explode',
       '/assets/explode.png',
       {
-        frameWidth: 90,
-        frameHeight: 90,
+        frameWidth: 32,
+        frameHeight: 32,
       }
     );
   }
