@@ -1,6 +1,8 @@
 //ゲーム内の全てのオブジェクトの親クラス
 export class GameObject extends Phaser.Physics.Arcade
   .Sprite {
+  protected spriteKey: string = '';
+
   constructor(
     params: {
       scene: Phaser.Scene;
@@ -10,6 +12,8 @@ export class GameObject extends Phaser.Physics.Arcade
     spriteKey: string
   ) {
     super(params.scene, params.x, params.y, spriteKey);
+
+    this.spriteKey = spriteKey;
 
     //Sceneに追加
     params.scene.add.existing(this);
