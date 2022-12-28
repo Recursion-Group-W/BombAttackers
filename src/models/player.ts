@@ -3,9 +3,9 @@ import { Character } from './character';
 export class Player extends Character {
   private cursors: Phaser.Types.Input.Keyboard.CursorKeys;
   private bombCounter: number;
+  private bombPower:number;
   private playerColor:string;
   private bombCapacity:number;
-  private bombPower:number;
   private playerScore:number;
 
   constructor(params: {
@@ -19,6 +19,7 @@ export class Player extends Character {
     this.cursors =
       params.scene.input.keyboard.createCursorKeys();
     this.bombCounter = 3;
+    this.bombPower = 2;
 
     this.playerColor = "blue";
     this.bombCapacity = 1;
@@ -32,6 +33,10 @@ export class Player extends Character {
 
     // 初期設定の残機は３
     this.setRemainingLives = 3;
+  }
+
+  public bombPowerUp() {
+    this.bombPower++;
   }
 
   update() {

@@ -30,6 +30,14 @@ export class PreloadScene extends Phaser.Scene {
       frameWidth: 32,
       frameHeight: 32,
     });
+    this.load.spritesheet(
+      'explode',
+      '/assets/explode.png',
+      {
+        frameWidth: 32,
+        frameHeight: 32,
+      }
+    );
   }
 
   update() {

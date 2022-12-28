@@ -1,7 +1,6 @@
 import { Scene } from 'phaser';
 import { Enemy } from '../models/enemy';
 import { Player } from '../models/player';
-import { Bomb } from '../models/bomb';
 import { View } from '../view/view';
 
 export class GameScene extends Scene {
@@ -132,6 +131,7 @@ export class GameScene extends Scene {
       0
     );
     this.bombs = this.physics.add.staticGroup();
+
     //ステージマップの衝突を有効にする
     groundLayer.setCollisionByExclusion([-1], true);
     wallLayer.setCollisionByExclusion([-1], true);
@@ -240,18 +240,50 @@ export class GameScene extends Scene {
         this.bombLog.y != this.player.y ||
         !this.bombLog.existed
       ) {
-        bomb = new Bomb({
-          scene: this,
-          x: this.player.x,
-          y: this.player.y,
-        });
+        bomb = this.bombs.create(
+          this.player.x,
+          this.player.y,
+          'bomb'
+        );
         this.bombLog.existed = true;
         this.player.decreaseBombCounter();
         bomb.anims.play('bomb-anime', true);
+
         window.setTimeout(() => {
           this.bombLog.x = bomb.x;
           this.bombLog.y = bomb.y;
           bomb.destroy();
+
+          const ex = this.physics.add.sprite(
+            bomb.x,
+            bomb.y,
+            'explode'
+          );
+          const exk = this.physics.add.sprite(
+            bomb.x,
+            bomb.y - 32,
+            'explode'
+          );
+          const exj = this.physics.add.sprite(
+            bomb.x,
+            bomb.y + 32,
+            'explode'
+          );
+          const exh = this.physics.add.sprite(
+            bomb.x - 32,
+            bomb.y,
+            'explode'
+          );
+          const exl = this.physics.add.sprite(
+            bomb.x + 32,
+            bomb.y,
+            'explode'
+          );
+          ex.anims.play('explode-anime', true);
+          exk.anims.play('explode-anime', true);
+          exj.anims.play('explode-anime', true);
+          exh.anims.play('explode-anime', true);
+          exl.anims.play('explode-anime', true);
           this.bombLog.existed = false;
           this.player.increaseBombCounter();
         }, 2000);
@@ -362,6 +394,15 @@ export class GameScene extends Scene {
       frames: this.anims.generateFrameNumbers('bomb', {
         start: 0,
         end: 7,
+      }),
+    });
+    this.anims.create({
+      key: 'explode-anime',
+      frameRate: 20,
+      repeat: 0,
+      frames: this.anims.generateFrameNumbers('explode', {
+        start: 0,
+        end: 9,
       }),
     });
   }
