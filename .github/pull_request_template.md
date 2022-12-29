@@ -1,3 +1,6 @@
+## PRの目的
+- ・・・
+
 ## 概要
 - 〇〇の実装
 - 追加昨日の作成
@@ -15,4 +18,4 @@ https://mui.com/material-ui/guides/server-rendering/#reference-implementations
 
 ## その他
 
-* レビュワーへの参考情報（実装上の懸念点や注意点などあれば記載）
+- レビュワーへの参考情報（実装上の懸念点や注意点などあれば記載）
