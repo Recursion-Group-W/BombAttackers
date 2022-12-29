@@ -26,7 +26,7 @@ export class GameScene extends Scene {
     existed: boolean;
   };
 
-  private gameState = this.registry.get('gameState');
+  gameState;
 
   constructor() {
     super({ key: 'GameScene' });
@@ -106,6 +106,8 @@ export class GameScene extends Scene {
   }
 
   create() {
+    this.gameState = this.registry.get('gameState');
+    
     this.game.events.emit(
       'setPlayerName',
       'Recursion-Group-W',
