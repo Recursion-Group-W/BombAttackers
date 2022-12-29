@@ -26,6 +26,8 @@ export class GameScene extends Scene {
     existed: boolean;
   };
 
+  private gameState = this.registry.get('gameState');
+
   constructor() {
     super({ key: 'GameScene' });
     this.bombLog = {
@@ -34,50 +36,50 @@ export class GameScene extends Scene {
       existed: false,
     };
     this.timer = 0;
-    this.isGameOver = false,
-    this.isGameClear = false,
-    this.stageName = "first"
+    (this.isGameOver = false),
+      (this.isGameClear = false),
+      (this.stageName = 'first');
     // とりあえず残機を４に設定
   }
 
   // getter,setter
-  public get getWidth():number{
+  public get getWidth(): number {
     return this.width;
   }
 
-  public set setWidth(newWidth:number){
+  public set setWidth(newWidth: number) {
     this.width = newWidth;
   }
 
-  public get getHeight():number{
+  public get getHeight(): number {
     return this.height;
   }
 
-  public set setHeight(newHeight:number){
+  public set setHeight(newHeight: number) {
     this.height = newHeight;
   }
 
-  public get getIsGameOver():boolean{
+  public get getIsGameOver(): boolean {
     return this.isGameOver;
   }
 
-  public set setIsGameOver(gameStatus:boolean){
+  public set setIsGameOver(gameStatus: boolean) {
     this.isGameOver = gameStatus;
   }
 
-  public get getIsGameClear():boolean{
+  public get getIsGameClear(): boolean {
     return this.isGameClear;
   }
 
-  public set setIsGameClear(gameStatus:boolean){
+  public set setIsGameClear(gameStatus: boolean) {
     this.isGameClear = gameStatus;
   }
 
-  public get getStageName():string{
+  public get getStageName(): string {
     return this.stageName;
   }
 
-  public set setStageName(nextStage:string){
+  public set setStageName(nextStage: string) {
     this.stageName = nextStage;
   }
 
@@ -104,6 +106,14 @@ export class GameScene extends Scene {
   }
 
   create() {
+    this.game.events.emit(
+      'setPlayerName',
+      'Recursion-Group-W',
+      0
+    );
+
+    console.log(this.gameState);
+
     this.map = this.make.tilemap({
       key: `stage${this.level}`,
     });
@@ -407,37 +417,40 @@ export class GameScene extends Scene {
     });
   }
 
-  private activateGameOverScreen():void{
-    if (this.player.getRemainingLives <= 0 && !this.isGameOver) {
-        View.renderGameOverPage()
+  private activateGameOverScreen(): void {
+    if (
+      this.player.getRemainingLives <= 0 &&
+      !this.isGameOver
+    ) {
+      View.renderGameOverPage();
     }
+  }
+
+  private activateGameClear(): void {
+    // if (ゲームクリアの条件);
+    if (this.stageName == 'second')
+      this.setIsGameClear = true;
+  }
+
+  private changeStage(nextStage: string): void {
+    if (this.isGameClear) {
+      this.setStageName = nextStage;
+      this.activateNewScreen();
+    }
+  }
+
+  private activateNewScreen(): void {
+    switch (this.stageName) {
+      case 'first':
+        View.renderFirstStagePage();
+        break;
+      case 'second':
+        View.renderSecondStagePage();
+        break;
+    }
+  }
+
+  private set setPlayerColor(color: string) {
+    // idをkey、colorをvalueにして色を配る？
+  }
 }
-
-  private activateGameClear():void{
-      // if (ゲームクリアの条件);
-      if (this.stageName == "second") this.setIsGameClear = true;
-  }
-
-  private changeStage(nextStage:string):void{
-      if (this.isGameClear) {
-          this.setStageName = nextStage
-          this.activateNewScreen()
-      }
-  }
-
-  private activateNewScreen():void{
-      switch(this.stageName){
-          case "first":
-              View.renderFirstStagePage();
-              break;
-          case "second":
-              View.renderSecondStagePage();
-              break;
-      }
-  }
-
-  private set setPlayerColor(color:string){
-      // idをkey、colorをvalueにして色を配る？
-  }
-}
-
