@@ -11,6 +11,7 @@ export class GameScene extends Phaser.Scene {
   private height: number; //描画範囲(width)
   private player: Player; //プレイヤー
   private enemies: Phaser.GameObjects.Group; //敵キャラのグループ
+
   // note:mapはcurrentMapとそれ以外みたいな保持の仕方もあり？
   private map: Phaser.Tilemaps.Tilemap; //タイルマップ（ステージ）
   private timer: number;
@@ -366,51 +367,68 @@ export class GameScene extends Phaser.Scene {
       frames: [{ key: 'player', frame: 0 }],
     });
 
+    //敵
     this.anims.create({
-      key: 'enemy-right',
+      key: `${this.enemyFactory.SpriteKey}-right`,
       frameRate: 10,
       repeat: -1,
-      frames: this.anims.generateFrameNumbers('enemy', {
-        start: 5,
-        end: 7,
-      }),
+      frames: this.anims.generateFrameNumbers(
+        `${this.enemyFactory.SpriteKey}`,
+        {
+          start: 5,
+          end: 7,
+        }
+      ),
     });
     this.anims.create({
-      key: 'enemy-turn-right',
+      key: `${this.enemyFactory.SpriteKey}-turn-right`,
       frameRate: 10,
       repeat: 0,
-      frames: [{ key: 'player', frame: 4 }],
+      frames: [
+        { key: `${this.enemyFactory.SpriteKey}`, frame: 4 },
+      ],
     });
     this.anims.create({
-      key: 'enemy-down',
+      key: `${this.enemyFactory.SpriteKey}-down`,
       frameRate: 10,
       repeat: -1,
-      frames: this.anims.generateFrameNumbers('enemy', {
-        start: 2,
-        end: 3,
-      }),
+      frames: this.anims.generateFrameNumbers(
+        `${this.enemyFactory.SpriteKey}`,
+        {
+          start: 2,
+          end: 3,
+        }
+      ),
     });
     this.anims.create({
-      key: 'enemy-turn-down',
+      key: `${this.enemyFactory.SpriteKey}-turn-down`,
       frameRate: 10,
       repeat: 0,
-      frames: [{ key: 'enemy', frame: 1 }],
+      frames: [
+        { key: `${this.enemyFactory.SpriteKey}`, frame: 1 },
+      ],
     });
     this.anims.create({
-      key: 'enemy-up',
+      key: `${this.enemyFactory.SpriteKey}-up`,
       frameRate: 10,
       repeat: -1,
-      frames: this.anims.generateFrameNumbers('enemy', {
-        start: 8,
-        end: 9,
-      }),
+      frames: this.anims.generateFrameNumbers(
+        `${this.enemyFactory.SpriteKey}`,
+        {
+          start: 8,
+          end: 9,
+        }
+      ),
     });
     this.anims.create({
-      key: 'enemy-turn-up',
+      key: `${this.enemyFactory.SpriteKey}-turn-up`,
       frameRate: 10,
       repeat: 0,
-      frames: [{ key: 'enemy', frame: 0 }],
+      frames: [
+        { key: `${this.enemyFactory.SpriteKey}`, frame: 0 },
+      ],
     });
+
     this.anims.create({
       key: 'bomb-anime',
       frameRate: 10,

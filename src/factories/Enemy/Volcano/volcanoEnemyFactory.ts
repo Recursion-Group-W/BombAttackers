@@ -14,7 +14,7 @@ export class VolcanoEnemyFactory
   extends GenericEnemyFactory
   implements EnemyFactory
 {
-  static SpriteKey = 'volcanoEnemy';
+  readonly SpriteKey = 'volcanoEnemy';
   constructor() {
     super();
   }
@@ -66,7 +66,7 @@ export class VolcanoEnemyFactory
         x: position.x,
         y: position.y,
       },
-      VolcanoEnemyFactory.SpriteKey,
+      this.SpriteKey,
       this.EnemyMap['low'].speed,
       this.EnemyMap['low'].stock,
       this.EnemyMap['low'].initialMode
@@ -82,7 +82,7 @@ export class VolcanoEnemyFactory
         x: position.x,
         y: position.y,
       },
-      VolcanoEnemyFactory.SpriteKey,
+      this.SpriteKey,
       this.EnemyMap['mid'].speed,
       this.EnemyMap['mid'].stock,
       this.EnemyMap['mid'].initialMode
@@ -98,7 +98,7 @@ export class VolcanoEnemyFactory
         x: position.x,
         y: position.y,
       },
-      VolcanoEnemyFactory.SpriteKey,
+      this.SpriteKey,
       this.EnemyMap['high'].speed,
       this.EnemyMap['high'].stock,
       this.EnemyMap['high'].initialMode
