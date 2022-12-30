@@ -1,45 +1,25 @@
+import dynamic from 'next/dynamic';
 import React, { useEffect, useState } from 'react';
+import { GameDisplay } from '../../components/GameDisplay';
 
-import { Game as GameType } from 'phaser';
-
+// const GameDisplay = dynamic(
+//   async () =>
+//     await import('../../components/GameDisplay').then(
+//       (module) => module.GameDisplay
+//     ),
+//   { ssr: false }
+// );
 const index = () => {
-  const [game, setGame] = useState<GameType>();
-  const initPhaser = async () => {
-    const Phaser = await import('phaser');
-    const { PreloadScene } = await import(
-      '../../scenes/PreloadScene'
-    );
-    const { GameScene } = await import(
-      '../../scenes/GameScene'
-    );
-
-    const config: Phaser.Types.Core.GameConfig = {
-      type: Phaser.AUTO,
-      parent: 'game',
-      width: 800,
-      physics: {
-        default: 'arcade',
-        arcade: {
-          gravity: { y: 0 },
-          debug: true,
-        },
-      },
-      height: 800,
-      pixelArt: true,
-      scene: [PreloadScene, GameScene],
-      backgroundColor: '#a9a9a9',
-    };
-    const phaserGame = new Phaser.Game(config);
-    setGame(phaserGame);
-  };
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    initPhaser();
+    setLoading(true);
   }, []);
-
+  useEffect(() => {}, []);
   return (
     <>
-      <div id='game' key='game' />
+      <div key={Math.random()} id='game'></div>
+      {loading ? <GameDisplay /> : null}
     </>
   );
 };
