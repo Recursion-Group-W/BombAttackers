@@ -43,15 +43,14 @@ export class Player extends Character {
     this.handleInput();
   }
 
-  //敵とぶつかった時
-  collideWithEnemy(stockText: Phaser.GameObjects.Text, gameOverText: Phaser.GameObjects.Text) {
+  damagedPlayer(stockText: Phaser.GameObjects.Text, gameOverText: Phaser.GameObjects.Text) {
     this.scene.cameras.main.shake(1000, 0.001);
     this.setTintFill(0xff0000);
     //残機を減らす
     this.setRemainingLives = this.getRemainingLives - 1;
 
     //残機の表示を更新
-    stockText.setText('Stock: ' + this.getRemainingLives);
+    stockText.setText('Stock ' + this.getRemainingLives);
 
     //残機が0になったらGAME OVER
     //note:0未満では？
