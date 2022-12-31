@@ -27,7 +27,7 @@ export class Character
   private speed = 0;
   // 0:up, 1:right, 2:down, 3:left
   private direction = 2;
-  private remainingLives = 0;
+  private remainingLives = 0; // protectedにしてset/getを不要にした方が扱いやすいかも
 
   constructor(
     params: {

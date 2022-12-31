@@ -37,9 +37,9 @@ export class GameScene extends Scene {
     };
     this.hit = true;
     this.timer = 0;
-    (this.isGameOver = false),
-      (this.isGameClear = false),
-      (this.stageName = 'first');
+    this.isGameOver = false;
+    this.isGameClear = false;
+    this.stageName = 'first';
   }
 
   // getter,setter
@@ -87,10 +87,7 @@ export class GameScene extends Scene {
   init(data: { stageLevel: number }) {
     this.level = data.stageLevel;
   }
-  // note:widthやheightの再宣言の理由
-  // note:データ型の理由
-  // note:コンストラクタで行わない理由
-
+  
   preload() {
     const width: string | number =
       this.scene.systems.game.config['width'];
@@ -155,7 +152,6 @@ export class GameScene extends Scene {
     this.initAnimation();
 
     //敵キャラたち
-    // note:12/28 コンストラクターでやらない理由
     this.enemies = this.add.group();
 
     const objectLayer = this.map.getObjectLayer('objects');
@@ -237,6 +233,20 @@ export class GameScene extends Scene {
       null,
       this
     );
+    this.physics.add.collider(
+      this.enemies,
+      this.explosion,
+      (
+        enemy: Phaser.Types.Physics.Arcade.GameObjectWithBody
+      ) => {
+        if (this.hit) {
+          enemy.overlapExplosion();
+        }
+        this.hit = false;
+      },
+      null,
+      this
+    );
     //すり抜けた時（爆弾、アイテムなど）
     // this.physics.add.overlap(
     //   this.player,
@@ -246,8 +256,6 @@ export class GameScene extends Scene {
     //   }
     // );
   }
-
-  // 爆弾を作る関数
 
   update() {
     //キー入力によってプレイヤーの位置を更新

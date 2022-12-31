@@ -5,7 +5,7 @@ export class Player extends Character {
   private bombCounter: number;
   private bombPower:number;
   private playerColor:string;
-  private bombCapacity:number;
+  private bombCapacity:number; // Todo:bombCounterと機能が被ってるので後で削除する
   private playerScore:number;
 
   constructor(params: {
@@ -33,6 +33,7 @@ export class Player extends Character {
 
     // 初期設定の残機は３
     this.setRemainingLives = 3;
+    // this.remainingLives = 3;
   }
 
   public bombPowerUp() {

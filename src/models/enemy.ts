@@ -21,14 +21,14 @@ export class Enemy extends Character {
     //最初に動く方向をランダムにセット
     this.setDirection = getRandomInt(0, 4);
 
-    this.setRemainingLives = 2;
+    this.setRemainingLives = 1;
   }
 
   //GameObjectによってオーバーライドされる更新メソッド
   //このメソッドが何度も呼び出されるため、
   //この中にオブジェクトの位置や速度を変化させる記述を書いておくと、動きを付けられる
   update() {
-    this.moveRamdom();
+    // this.moveRamdom();
   }
 
   //ランダムな動き
@@ -71,9 +71,9 @@ export class Enemy extends Character {
   //爆風と重なった時
   overlapExplosion() {
     //残機を減らす
-    this.setRemainingLives = this.getRemainingLives - 1;
+    this.remainingLives--;
     //残機が0になったらオブジェクトを削除
-    if (this.getRemainingLives <= 0) {
+    if (this.remainingLives <= 0) {
       this.disableBody(true, true);
     }
   }
