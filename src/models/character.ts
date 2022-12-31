@@ -13,7 +13,6 @@ interface GameObject {
   set setSpeed(value: number); //速さを設定
   accelerate(value: number): void; //加速
   get getLives(): number; //残機の数
-  takeDamage():void; //ダメージを受けた時の処理
 }
 
 export class Character
