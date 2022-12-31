@@ -71,9 +71,9 @@ export class Enemy extends Character {
   //爆風と重なった時
   overlapExplosion() {
     //残機を減らす
-    this.remainingLives--;
+    this.setRemainingLives = this.getRemainingLives - 1;
     //残機が0になったらオブジェクトを削除
-    if (this.remainingLives <= 0) {
+    if (this.getRemainingLives <= 0) {
       this.disableBody(true, true);
     }
   }
