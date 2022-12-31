@@ -87,7 +87,7 @@ export class GameScene extends Scene {
   init(data: { stageLevel: number }) {
     this.level = data.stageLevel;
   }
-  
+
   preload() {
     const width: string | number =
       this.scene.systems.game.config['width'];
@@ -157,19 +157,25 @@ export class GameScene extends Scene {
     const objectLayer = this.map.getObjectLayer('objects');
     objectLayer.objects.forEach((object) => {
       if (object.name === 'player') {
-        this.player = new Player({
-          scene: this,
-          x: object.x + 0,
-          y: object.y + 0,
-        });
-      }
-      if (object.name === 'enemy') {
-        this.enemies.add(
-          new Enemy({
+        this.player = new Player(
+          {
             scene: this,
             x: object.x + 0,
             y: object.y + 0,
-          })
+          },
+          3
+        );
+      }
+      if (object.name === 'enemy') {
+        this.enemies.add(
+          new Enemy(
+            {
+              scene: this,
+              x: object.x + 0,
+              y: object.y + 0,
+            },
+            1
+          )
         );
       }
     });
@@ -178,7 +184,7 @@ export class GameScene extends Scene {
     this.stockText = this.add.text(
       16,
       0,
-      `Stock ${this.player.getRemainingLives}`,
+      `Stock ${this.player.getLives}`,
       {
         fontSize: '32px',
       }
@@ -203,11 +209,10 @@ export class GameScene extends Scene {
       this.player,
       this.enemies,
       (
-        player: Phaser.Types.Physics.Arcade.GameObjectWithBody,
         enemy: Phaser.Types.Physics.Arcade.GameObjectWithBody
       ) => {
         //衝突した時の処理
-        player.damagedPlayer(
+        this.player.damagedPlayer(
           this.stockText,
           this.gameOverText
         );
@@ -219,11 +224,9 @@ export class GameScene extends Scene {
     this.physics.add.collider(
       this.player,
       this.explosion,
-      (
-        player: Phaser.Types.Physics.Arcade.GameObjectWithBody
-      ) => {
+      () => {
         if (this.hit) {
-          player.damagedPlayer(
+          this.player.damagedPlayer(
             this.stockText,
             this.gameOverText
           );
@@ -240,7 +243,7 @@ export class GameScene extends Scene {
         enemy: Phaser.Types.Physics.Arcade.GameObjectWithBody
       ) => {
         if (this.hit) {
-          enemy.overlapExplosion();
+          enemy.damagedEnemy();
         }
         this.hit = false;
       },

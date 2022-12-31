@@ -5,12 +5,15 @@ import { Player } from './player';
 export class Enemy extends Character {
   private mode = 'complicated';
 
-  constructor(params: {
-    scene: Phaser.Scene;
-    x: number;
-    y: number;
-  }) {
-    super(params, 'enemy');
+  constructor(
+    params: {
+      scene: Phaser.Scene;
+      x: number;
+      y: number;
+    },
+    lives: number
+  ) {
+    super(params, 'enemy', lives);
     this.setSpeed = 80;
 
     //Arcade Physicsをゲームオブジェクトに追加
@@ -20,8 +23,6 @@ export class Enemy extends Character {
 
     //最初に動く方向をランダムにセット
     this.setDirection = getRandomInt(0, 4);
-
-    this.setRemainingLives = 1;
   }
 
   //GameObjectによってオーバーライドされる更新メソッド
@@ -69,11 +70,10 @@ export class Enemy extends Character {
   }
 
   //爆風と重なった時
-  overlapExplosion() {
-    //残機を減らす
-    this.setRemainingLives = this.getRemainingLives - 1;
+  damagedEnemy() {
+    this.lives--;
     //残機が0になったらオブジェクトを削除
-    if (this.getRemainingLives <= 0) {
+    if (this.lives <= 0) {
       this.disableBody(true, true);
     }
   }
