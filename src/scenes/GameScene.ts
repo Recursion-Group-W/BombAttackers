@@ -7,6 +7,7 @@ export class GameScene extends Scene {
   private width: number; //描画範囲(width)
   private height: number; //描画範囲(width)
   private player: Player; //プレイヤー
+  private hit: boolean;
   private enemies: Phaser.GameObjects.Group; //敵キャラのグループ
   // note:mapはcurrentMapとそれ以外みたいな保持の仕方もあり？
   private map: Phaser.Tilemaps.Tilemap; //タイルマップ（ステージ）
@@ -25,6 +26,7 @@ export class GameScene extends Scene {
     y: number;
     existed: boolean;
   };
+  private explosion: Phaser.GameObjects.Group;
 
   gameState;
 
@@ -35,11 +37,11 @@ export class GameScene extends Scene {
       y: -1,
       existed: false,
     };
+    this.hit = true;
     this.timer = 0;
     (this.isGameOver = false),
       (this.isGameClear = false),
       (this.stageName = 'first');
-    // とりあえず残機を４に設定
   }
 
   // getter,setter
@@ -143,6 +145,7 @@ export class GameScene extends Scene {
       0
     );
     this.bombs = this.physics.add.staticGroup();
+    this.explosion = this.physics.add.group();
 
     //ステージマップの衝突を有効にする
     groundLayer.setCollisionByExclusion([-1], true);
@@ -173,7 +176,7 @@ export class GameScene extends Scene {
         this.player = new Player({
           scene: this,
           x: object.x + 0,
-          y: object.y! + 0,
+          y: object.y + 0,
         });
       }
       if (object.name === 'enemy') {
@@ -220,11 +223,28 @@ export class GameScene extends Scene {
         enemy: Phaser.Types.Physics.Arcade.GameObjectWithBody
       ) => {
         //衝突した時の処理
-        player.collideWithEnemy(
+        player.damagedPlayer(
           this.stockText,
           this.gameOverText
         );
         enemy.collideWithPlayer();
+      },
+      null,
+      this
+    );
+    this.physics.add.collider(
+      this.player,
+      this.explosion,
+      (
+        player: Phaser.Types.Physics.Arcade.GameObjectWithBody
+      ) => {
+        if (this.hit) {
+          player.damagedPlayer(
+            this.stockText,
+            this.gameOverText
+          );
+        }
+        this.hit = false;
       },
       null,
       this
@@ -266,38 +286,35 @@ export class GameScene extends Scene {
           this.bombLog.y = bomb.y;
           bomb.destroy();
 
-          const ex = this.physics.add.sprite(
-            bomb.x,
-            bomb.y,
-            'explode'
-          );
-          const exk = this.physics.add.sprite(
-            bomb.x,
-            bomb.y - 32,
-            'explode'
-          );
-          const exj = this.physics.add.sprite(
-            bomb.x,
-            bomb.y + 32,
-            'explode'
-          );
-          const exh = this.physics.add.sprite(
-            bomb.x - 32,
-            bomb.y,
-            'explode'
-          );
-          const exl = this.physics.add.sprite(
+          this.explosion.create(bomb.x, bomb.y, 'explode');
+          this.explosion.create(
             bomb.x + 32,
             bomb.y,
             'explode'
           );
-          ex.anims.play('explode-anime', true);
-          exk.anims.play('explode-anime', true);
-          exj.anims.play('explode-anime', true);
-          exh.anims.play('explode-anime', true);
-          exl.anims.play('explode-anime', true);
+          this.explosion.create(
+            bomb.x,
+            bomb.y + 32,
+            'explode'
+          );
+          this.explosion.create(
+            bomb.x - 32,
+            bomb.y,
+            'explode'
+          );
+          this.explosion.create(
+            bomb.x,
+            bomb.y - 32,
+            'explode'
+          );
+          this.explosion.playAnimation('explode-anime');
+
           this.bombLog.existed = false;
           this.player.increaseBombCounter();
+          window.setTimeout(() => {
+            this.explosion.clear();
+            this.hit = true;
+          }, 600);
         }, 2000);
       }
     }
