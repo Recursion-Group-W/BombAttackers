@@ -7,7 +7,6 @@ export class GameScene extends Scene {
   private width: number; //描画範囲(width)
   private height: number; //描画範囲(width)
   private player: Player; //プレイヤー
-  private hit: boolean;
   private enemies: Phaser.GameObjects.Group; //敵キャラのグループ
   // note:mapはcurrentMapとそれ以外みたいな保持の仕方もあり？
   private map: Phaser.Tilemaps.Tilemap; //タイルマップ（ステージ）
@@ -35,7 +34,6 @@ export class GameScene extends Scene {
       y: -1,
       existed: false,
     };
-    this.hit = true;
     this.timer = 0;
     this.isGameOver = false;
     this.isGameClear = false;
@@ -225,13 +223,13 @@ export class GameScene extends Scene {
       this.player,
       this.explosion,
       () => {
-        if (this.hit) {
+        if (!this.player.getHit) {
           this.player.damagedPlayer(
             this.stockText,
             this.gameOverText
           );
         }
-        this.hit = false;
+        this.player.setHit = true;
       },
       null,
       this
@@ -242,22 +240,14 @@ export class GameScene extends Scene {
       (
         enemy: Phaser.Types.Physics.Arcade.GameObjectWithBody
       ) => {
-        if (this.hit) {
+        if (!enemy.getHit) {
           enemy.damagedEnemy();
         }
-        this.hit = false;
+        enemy.setHit = true;
       },
       null,
       this
     );
-    //すり抜けた時（爆弾、アイテムなど）
-    // this.physics.add.overlap(
-    //   this.player,
-    //   this.bomb,
-    //   () => {
-    //     //すり抜けた時の処理(残機を減らす、アイテム取得)
-    //   }
-    // );
   }
 
   update() {
@@ -312,7 +302,7 @@ export class GameScene extends Scene {
           this.player.increaseBombCounter();
           window.setTimeout(() => {
             this.explosion.clear();
-            this.hit = true;
+            this.player.setHit = false;
           }, 600);
         }, 2000);
       }

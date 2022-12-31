@@ -8,11 +8,13 @@ interface GameObject {
   get getDirection(): number; //向きを取得
   get getPosition(): Position; //位置を取得
   get getSpeed(): number; //速さを取得
-  isAlive(): boolean; //残機があるかどうか
+  get getLives(): number; //残機の数
+  get getHit(): boolean;
   set setDirection(value: number); //向きを設定
   set setSpeed(value: number); //速さを設定
+  set setHit(value: boolean);
+  isAlive(): boolean; //残機があるかどうか
   accelerate(value: number): void; //加速
-  get getLives(): number; //残機の数
 }
 
 export class Character
@@ -26,6 +28,7 @@ export class Character
   // 0:up, 1:right, 2:down, 3:left
   private direction = 2;
   protected lives;
+  protected hit = false;
 
   constructor(
     params: {
@@ -58,16 +61,23 @@ export class Character
   public get getLives(): number {
     return this.lives;
   }
+  public get getHit(): boolean {
+    return this.hit;
+  }
+
   public set setSpeed(value: number) {
     this.speed = value;
-  }
-  public isAlive(): boolean {
-    return this.lives >= 0;
   }
   public set setDirection(value: number) {
     this.direction = value;
   }
-
+  public set setHit(value: boolean) {
+    this.hit = value;
+  }
+  
+  public isAlive(): boolean {
+    return this.lives >= 0;
+  }
   public accelerate(value: number): void {
     this.setSpeed = this.getSpeed + value;
   }
