@@ -28,6 +28,8 @@ export class GameScene extends Scene {
   };
   private explosion: Phaser.GameObjects.Group;
 
+  gameState;
+
   constructor() {
     super({ key: 'GameScene' });
     this.bombLog = {
@@ -106,6 +108,16 @@ export class GameScene extends Scene {
   }
 
   create() {
+    this.gameState = this.registry.get('gameState');
+    
+    this.game.events.emit(
+      'setPlayerName',
+      'Recursion-Group-W',
+      0
+    );
+
+    console.log(this.gameState);
+
     this.map = this.make.tilemap({
       key: `stage${this.level}`,
     });
