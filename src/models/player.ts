@@ -3,17 +3,20 @@ import { Character } from './character';
 export class Player extends Character {
   private cursors: Phaser.Types.Input.Keyboard.CursorKeys;
   private bombCounter: number;
-  private bombPower:number;
-  private playerColor:string;
-  private bombCapacity:number;
-  private playerScore:number;
+  private bombPower: number;
+  private playerColor: string;
+  private bombCapacity: number; // Todo:bombCounterと機能が被ってるので後で削除する
+  private playerScore: number;
 
-  constructor(params: {
-    scene: Phaser.Scene;
-    x: number;
-    y: number;
-  }) {
-    super(params, 'player');
+  constructor(
+    params: {
+      scene: Phaser.Scene;
+      x: number;
+      y: number;
+    },
+    lives: number
+  ) {
+    super(params, 'player', lives);
     this.setSpeed = 120;
     // 上、下、左、右、スペース、シフトのキーを含むオブジェクトを作成して返す。
     this.cursors =
@@ -21,18 +24,15 @@ export class Player extends Character {
     this.bombCounter = 3;
     this.bombPower = 2;
 
-    this.playerColor = "blue";
+    this.playerColor = 'blue';
     this.bombCapacity = 1;
     this.bombPower = 1;
-    this.playerScore = 0
+    this.playerScore = 0;
 
     params.scene.add.existing(this);
     params.scene.physics.world.enable(this);
 
     this.body.maxVelocity = <any>{ x: 250, y: 250 };
-
-    // 初期設定の残機は３
-    this.setRemainingLives = 3;
   }
 
   public bombPowerUp() {
@@ -43,18 +43,20 @@ export class Player extends Character {
     this.handleInput();
   }
 
-  damagedPlayer(stockText: Phaser.GameObjects.Text, gameOverText: Phaser.GameObjects.Text) {
+  damagedPlayer(
+    stockText: Phaser.GameObjects.Text,
+    gameOverText: Phaser.GameObjects.Text
+  ) {
     this.scene.cameras.main.shake(1000, 0.001);
     this.setTintFill(0xff0000);
-    //残機を減らす
-    this.setRemainingLives = this.getRemainingLives - 1;
+
+    this.lives--;
 
     //残機の表示を更新
-    stockText.setText('Stock ' + this.getRemainingLives);
+    stockText.setText('Stock ' + this.lives);
 
     //残機が0になったらGAME OVER
-    //note:0未満では？
-    if (this.getRemainingLives <= 0) {
+    if (this.lives <= 0) {
       // this.disableBody(true, true);
       gameOverText.setText('GAME OVER');
       setTimeout(() => this.scene.scene.restart(), 1000);
@@ -65,9 +67,9 @@ export class Player extends Character {
   overlapExplosion() {
     this.scene.cameras.main.shake(1000, 0.001);
     //残機を減らす
-    this.setRemainingLives = this.getRemainingLives - 1;
+    this.lives--;
     //残機が0になったらオブジェクトを削除
-    if (this.getRemainingLives <= 0) {
+    if (this.lives <= 0) {
       this.disableBody(true, true);
     }
   }
@@ -112,7 +114,10 @@ export class Player extends Character {
   }
 
   public placingBomb() {
-    return Phaser.Input.Keyboard.JustDown(this.cursors.space) && this.bombCounter > 0;
+    return (
+      Phaser.Input.Keyboard.JustDown(this.cursors.space) &&
+      this.bombCounter > 0
+    );
   }
   public decreaseBombCounter() {
     this.bombCounter--;
@@ -122,35 +127,35 @@ export class Player extends Character {
   }
 
   // setter,getter
-  public get getPlayerColor(): string{
+  public get getPlayerColor(): string {
     return this.playerColor;
   }
 
-  public set setPlayerColor(color:string){
-    this.playerColor = color
+  public set setPlayerColor(color: string) {
+    this.playerColor = color;
   }
 
-  public get getBombCapacity(): number{
+  public get getBombCapacity(): number {
     return this.bombCapacity;
   }
 
-  public set setBombCapacity(newCapacity:number){
+  public set setBombCapacity(newCapacity: number) {
     this.bombCapacity = newCapacity;
   }
 
-  public get getBombPower(): number{
+  public get getBombPower(): number {
     return this.bombPower;
   }
 
-  public set setBombPower(newPower:number){
+  public set setBombPower(newPower: number) {
     this.bombPower = newPower;
   }
 
-  public get getPlayerScore(): number{
+  public get getPlayerScore(): number {
     return this.playerScore;
   }
 
-  public set setPlayerScore(newScore:number){
+  public set setPlayerScore(newScore: number) {
     this.playerScore = newScore;
   }
 }

@@ -7,7 +7,6 @@ export class GameScene extends Scene {
   private width: number; //描画範囲(width)
   private height: number; //描画範囲(width)
   private player: Player; //プレイヤー
-  private hit: boolean;
   private enemies: Phaser.GameObjects.Group; //敵キャラのグループ
   // note:mapはcurrentMapとそれ以外みたいな保持の仕方もあり？
   private map: Phaser.Tilemaps.Tilemap; //タイルマップ（ステージ）
@@ -37,11 +36,10 @@ export class GameScene extends Scene {
       y: -1,
       existed: false,
     };
-    this.hit = true;
     this.timer = 0;
-    (this.isGameOver = false),
-      (this.isGameClear = false),
-      (this.stageName = 'first');
+    this.isGameOver = false;
+    this.isGameClear = false;
+    this.stageName = 'first';
   }
 
   // getter,setter
@@ -89,9 +87,6 @@ export class GameScene extends Scene {
   init(data: { stageLevel: number }) {
     this.level = data.stageLevel;
   }
-  // note:widthやheightの再宣言の理由
-  // note:データ型の理由
-  // note:コンストラクタで行わない理由
 
   preload() {
     const width: string | number =
@@ -167,25 +162,30 @@ export class GameScene extends Scene {
     this.initAnimation();
 
     //敵キャラたち
-    // note:12/28 コンストラクターでやらない理由
     this.enemies = this.add.group();
 
     const objectLayer = this.map.getObjectLayer('objects');
     objectLayer.objects.forEach((object) => {
       if (object.name === 'player') {
-        this.player = new Player({
-          scene: this,
-          x: object.x + 0,
-          y: object.y + 0,
-        });
-      }
-      if (object.name === 'enemy') {
-        this.enemies.add(
-          new Enemy({
+        this.player = new Player(
+          {
             scene: this,
             x: object.x + 0,
             y: object.y + 0,
-          })
+          },
+          3
+        );
+      }
+      if (object.name === 'enemy') {
+        this.enemies.add(
+          new Enemy(
+            {
+              scene: this,
+              x: object.x + 0,
+              y: object.y + 0,
+            },
+            1
+          )
         );
       }
     });
@@ -194,7 +194,7 @@ export class GameScene extends Scene {
     this.stockText = this.add.text(
       16,
       0,
-      `Stock ${this.player.getRemainingLives}`,
+      `Stock ${this.player.getLives}`,
       {
         fontSize: '32px',
       }
@@ -219,11 +219,10 @@ export class GameScene extends Scene {
       this.player,
       this.enemies,
       (
-        player: Phaser.Types.Physics.Arcade.GameObjectWithBody,
         enemy: Phaser.Types.Physics.Arcade.GameObjectWithBody
       ) => {
         //衝突した時の処理
-        player.damagedPlayer(
+        this.player.damagedPlayer(
           this.stockText,
           this.gameOverText
         );
@@ -235,31 +234,33 @@ export class GameScene extends Scene {
     this.physics.add.collider(
       this.player,
       this.explosion,
-      (
-        player: Phaser.Types.Physics.Arcade.GameObjectWithBody
-      ) => {
-        if (this.hit) {
-          player.damagedPlayer(
+      () => {
+        if (!this.player.getHit) {
+          this.player.damagedPlayer(
             this.stockText,
             this.gameOverText
           );
         }
-        this.hit = false;
+        this.player.setHit = true;
       },
       null,
       this
     );
-    //すり抜けた時（爆弾、アイテムなど）
-    // this.physics.add.overlap(
-    //   this.player,
-    //   this.bomb,
-    //   () => {
-    //     //すり抜けた時の処理(残機を減らす、アイテム取得)
-    //   }
-    // );
+    this.physics.add.collider(
+      this.enemies,
+      this.explosion,
+      (
+        enemy: Phaser.Types.Physics.Arcade.GameObjectWithBody
+      ) => {
+        if (!enemy.getHit) {
+          enemy.damagedEnemy();
+        }
+        enemy.setHit = true;
+      },
+      null,
+      this
+    );
   }
-
-  // 爆弾を作る関数
 
   update() {
     //キー入力によってプレイヤーの位置を更新
@@ -313,7 +314,7 @@ export class GameScene extends Scene {
           this.player.increaseBombCounter();
           window.setTimeout(() => {
             this.explosion.clear();
-            this.hit = true;
+            this.player.setHit = false;
           }, 600);
         }, 2000);
       }
