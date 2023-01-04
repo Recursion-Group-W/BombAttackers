@@ -117,8 +117,6 @@ export class GameScene extends Scene {
       0
     );
 
-    console.log(this.gameState);
-
     this.map = this.make.tilemap({
       key: `stage${this.level}`,
     });
@@ -254,8 +252,15 @@ export class GameScene extends Scene {
       this.player,
       this.explosion,
       () => {
+        let lives = 0;
         if (!this.player.getHit) {
-          this.player.reduceLife();
+          lives = this.player.reduceLife();
+          this.stockText.setText('Stock ' + lives);
+          if (lives <= 0) {
+            this.player.disableBody();
+            this.gameOverText.setText('GAME OVER');
+            setTimeout(() => this.scene.restart(), 1000);
+          }
         }
         this.player.setHit = true;
       },
@@ -268,9 +273,9 @@ export class GameScene extends Scene {
       (
         enemy: Phaser.Types.Physics.Arcade.GameObjectWithBody
       ) => {
-        let lives:number;
+        let lives = 0;
         if (!enemy.getHit) {
-          lives = enemy.damagedEnemy();
+          lives = enemy.reduceLife();
           if (lives <= 0) {
             enemy.destroy();
             this.enemyCounter--;
@@ -464,7 +469,7 @@ export class GameScene extends Scene {
 
   private activateGameOverScreen(): void {
     if (
-      this.player.getRemainingLives <= 0 &&
+      this.player.getLives <= 0 &&
       !this.isGameOver
     ) {
       View.renderGameOverPage();
