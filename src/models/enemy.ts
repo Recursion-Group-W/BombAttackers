@@ -29,7 +29,7 @@ export class Enemy extends Character {
   //このメソッドが何度も呼び出されるため、
   //この中にオブジェクトの位置や速度を変化させる記述を書いておくと、動きを付けられる
   update() {
-    // this.moveRamdom();
+    this.moveRamdom();
   }
 
   //ランダムな動き
@@ -69,13 +69,9 @@ export class Enemy extends Character {
     this.moveByDirection(opposite);
   }
 
-  //爆風と重なった時
   damagedEnemy() {
     this.lives--;
-    //残機が0になったらオブジェクトを削除
-    if (this.lives <= 0) {
-      this.disableBody(true, true);
-    }
+    return this.lives;
   }
 
   //追跡する動き

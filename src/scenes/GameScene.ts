@@ -26,6 +26,7 @@ export class GameScene extends Scene {
     existed: boolean;
   };
   private explosion: Phaser.GameObjects.Group;
+  private enemyCounter: number;
 
   constructor() {
     super({ key: 'GameScene' });
@@ -38,6 +39,7 @@ export class GameScene extends Scene {
     this.isGameOver = false;
     this.isGameClear = false;
     this.stageName = 'first';
+    this.enemyCounter = 0;
   }
 
   // getter,setter
@@ -79,6 +81,10 @@ export class GameScene extends Scene {
 
   public set setStageName(nextStage: string) {
     this.stageName = nextStage;
+  }
+
+  public defeateEnemy() {
+    this.enemyCounter--;
   }
 
   //init, preload, create, updateはSceneに用意されているメソッドなので、オーバーライドする
@@ -164,19 +170,20 @@ export class GameScene extends Scene {
           3
         );
       }
-      if (object.name === 'enemy') {
+    });
+
+    for (let i = 1; i < 2; i++) {
+      for (let j = 1; j < 2; j++) {
+        if (i === 0 && j === 0) continue;
         this.enemies.add(
           new Enemy(
-            {
-              scene: this,
-              x: object.x + 0,
-              y: object.y + 0,
-            },
+            { scene: this, x: 100 * i, y: 100 * j },
             1
           )
         );
+        this.enemyCounter++;
       }
-    });
+    }
 
     // 残機
     this.stockText = this.add.text(
@@ -204,17 +211,29 @@ export class GameScene extends Scene {
     this.physics.add.collider(this.bombs, this.player);
     this.physics.add.collider(this.bombs, this.enemies);
     this.physics.add.collider(
-      this.player,
       this.enemies,
+      this.player,
       (
         enemy: Phaser.Types.Physics.Arcade.GameObjectWithBody
       ) => {
+        let lives = 0;
         //衝突した時の処理
-        this.player.damagedPlayer(
-          this.stockText,
-          this.gameOverText
-        );
+        if (!this.player.getHit) {
+          this.player.setTintFill(0xff0000);
+          lives = this.player.reduceLife();
+          this.player.setHit = true;
+          this.stockText.setText('Stock ' + lives);
+          if (lives <= 0) {
+            this.player.disableBody();
+            this.gameOverText.setText('GAME OVER');
+            setTimeout(() => this.scene.restart(), 1000);
+          }
+        }
         enemy.collideWithPlayer();
+        setTimeout(()=>{
+          this.player.clearTint();
+          this.player.setHit = false;
+        },1000);
       },
       null,
       this
@@ -224,10 +243,7 @@ export class GameScene extends Scene {
       this.explosion,
       () => {
         if (!this.player.getHit) {
-          this.player.damagedPlayer(
-            this.stockText,
-            this.gameOverText
-          );
+          this.player.reduceLife();
         }
         this.player.setHit = true;
       },
@@ -240,8 +256,17 @@ export class GameScene extends Scene {
       (
         enemy: Phaser.Types.Physics.Arcade.GameObjectWithBody
       ) => {
+        let lives:number;
         if (!enemy.getHit) {
-          enemy.damagedEnemy();
+          lives = enemy.damagedEnemy();
+          if (lives <= 0) {
+            enemy.destroy();
+            this.enemyCounter--;
+          }
+        }
+        if (this.enemyCounter <= 0) {
+          this.gameOverText.setText('GAME CLEAR');
+          setTimeout(() => this.scene.restart(), 1000);
         }
         enemy.setHit = true;
       },
@@ -270,7 +295,7 @@ export class GameScene extends Scene {
         this.player.decreaseBombCounter();
         bomb.anims.play('bomb-anime', true);
 
-        window.setTimeout(() => {
+        setTimeout(() => {
           this.bombLog.x = bomb.x;
           this.bombLog.y = bomb.y;
           bomb.destroy();
@@ -300,8 +325,8 @@ export class GameScene extends Scene {
 
           this.bombLog.existed = false;
           this.player.increaseBombCounter();
-          window.setTimeout(() => {
-            this.explosion.clear();
+          setTimeout(() => {
+            this.explosion.clear(true, true);
             this.player.setHit = false;
           }, 600);
         }, 2000);
