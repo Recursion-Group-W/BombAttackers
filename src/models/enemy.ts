@@ -69,15 +69,6 @@ export class Enemy extends Character {
     this.moveByDirection(opposite);
   }
 
-  //爆風と重なった時
-  damagedEnemy() {
-    this.lives--;
-    //残機が0になったらオブジェクトを削除
-    if (this.lives <= 0) {
-      this.disableBody(true, true);
-    }
-  }
-
   //追跡する動き
   chasePlayer(player: Player) {}
 

@@ -81,4 +81,9 @@ export class Character
   public accelerate(value: number): void {
     this.setSpeed = this.getSpeed + value;
   }
+
+  public reduceLife() {
+    this.lives--;
+    return this.lives;
+  }
 }

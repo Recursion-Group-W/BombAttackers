@@ -43,36 +43,11 @@ export class Player extends Character {
     this.handleInput();
   }
 
-  damagedPlayer(
-    stockText: Phaser.GameObjects.Text,
-    gameOverText: Phaser.GameObjects.Text
-  ) {
-    this.scene.cameras.main.shake(1000, 0.001);
-    this.setTintFill(0xff0000);
-
-    this.lives--;
-
-    //残機の表示を更新
-    stockText.setText('Stock ' + this.lives);
-
-    //残機が0になったらGAME OVER
-    if (this.lives <= 0) {
-      // this.disableBody(true, true);
-      gameOverText.setText('GAME OVER');
-      setTimeout(() => this.scene.scene.restart(), 1000);
-    }
-  }
-
-  //爆風に重なった時
-  overlapExplosion() {
-    this.scene.cameras.main.shake(1000, 0.001);
-    //残機を減らす
-    this.lives--;
-    //残機が0になったらオブジェクトを削除
-    if (this.lives <= 0) {
-      this.disableBody(true, true);
-    }
-  }
+  // reduceLife() {
+  //   this.lives--;
+  //   // this.scene.cameras.main.shake(1000, 0.001);
+  //   return this.lives;
+  // }
 
   handleInput() {
     if (this.cursors.left.isDown) {
