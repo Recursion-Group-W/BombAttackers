@@ -32,7 +32,8 @@ export default class LobbyScene extends Scene {
         .text(
           500,
           200,
-          `Your clientId is ${this.socket.clientId}`,
+          `Your clientId is 
+          ${this.socket.clientId}`,
           styles
         )
         .setOrigin(0.5, 0)
