@@ -26,6 +26,10 @@ export default class PreloadScene extends Scene {
       console.log('サーバーとソケット接続しました。');
     });
 
-    this.scene.start('LobbyScene', { socket });
+    socket.on('clientId', (clientId: string) => {
+      console.log(`Your clientId is ${clientId}`);
+      socket.clientId = clientId;
+      this.scene.start('LobbyScene', { socket });
+    });
   }
 }
