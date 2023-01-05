@@ -1,6 +1,7 @@
 import express from 'express';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
+import RoomManager from './manager/roomManager';
 import IoGame from './socket/ioGame';
 
 const app = express();
@@ -16,7 +17,9 @@ const io = new Server(httpServer, {
 
 //ゲームに関するソケット通信を行うためのNameSpace
 const ioNspGame = io.of('/game');
-const ioGame = new IoGame(ioNspGame);
+//Roomを管理するためのroomManager
+const roomManager = new RoomManager(ioNspGame)
+const ioGame = new IoGame(ioNspGame, roomManager);
 
 httpServer.listen(PORT, () => {
   console.log(`Server is runnning PORT:${PORT}`);
