@@ -1,7 +1,5 @@
 import Head from 'next/head';
-import Image from 'next/image';
 import { Inter } from '@next/font/google';
-import styles from '../styles/Home.module.css';
 import Link from 'next/link';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -21,8 +19,8 @@ export default function Home() {
         />
         <link rel='icon' href='/favicon.ico' />
       </Head>
-      <Link href='/play'>
-        <h1>→ 設定画面</h1>
+      <Link href='/game'>
+        <h1>→ GAME</h1>
       </Link>
     </>
   );
