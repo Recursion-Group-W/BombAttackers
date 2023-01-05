@@ -42,7 +42,7 @@ export default class LobbyScene extends Scene {
 
     texts.push(
       this.add
-        .text(500, 350, `→ Local Play Mode `, styles)
+        .text(500, 350, `→ Single Play Mode `, styles)
         .setOrigin(0.5, 0)
         .setInteractive()
     );
