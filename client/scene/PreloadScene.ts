@@ -26,6 +26,6 @@ export default class PreloadScene extends Scene {
       console.log('サーバーとソケット接続しました。');
     });
 
-    // this.scene.start('LobbyScene', { socket });
+    this.scene.start('LobbyScene', { socket });
   }
 }
