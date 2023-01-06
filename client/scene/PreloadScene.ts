@@ -9,9 +9,10 @@ export default class PreloadScene extends Scene {
   }
 
   preload() {
+
     this.load.spritesheet(
       SPRITE_KEY.PLAYER.toString(),
-      'assets/player_spritesheet_fixed.png',
+      `assets/player_spritesheet_fixed.png`,
       {
         frameWidth: 32,
         frameHeight: 32,

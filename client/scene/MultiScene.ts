@@ -12,7 +12,7 @@ export default class MultiScene extends Scene {
     const { scene, socket } = props;
     this.socket = socket;
     //入室の処理
-    // this.socket.emit('joinRoom', { scene });
+    this.socket.emit('joinRoom', { scene });
   }
 
   create() {

@@ -5,6 +5,9 @@ import RoomManager from './manager/roomManager';
 import IoGame from './socket/ioGame';
 
 const app = express();
+
+app.use(express.json())
+
 const httpServer = createServer(app);
 
 const PORT = 5000;
@@ -21,6 +24,6 @@ const ioNspGame = io.of('/game');
 const roomManager = new RoomManager(ioNspGame)
 const ioGame = new IoGame(ioNspGame, roomManager);
 
-httpServer.listen(PORT, () => {
+httpServer.listen(process.env.PORT || PORT, () => {
   console.log(`Server is runnning PORT:${PORT}`);
 });
